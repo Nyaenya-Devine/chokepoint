@@ -4,21 +4,21 @@ import PWARegister from "@/components/PWARegister";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nyaenya-devine-chokepoint.vercel.app"),
-  title: "Chokepoint — Least-Privilege Access Control & Tamper-Evident Audit",
+  title: "Chokepoint v2.0 — Live Security Operations with Voice Approvals",
   description:
-    "Chokepoint is a least-privilege access-control and tamper-evident audit platform for sensitive operations — humans and AI agents. Role separation, dual-control approvals, hash-chained audit log, and live risk detection.",
+    "Real-time endless high-impact requests that need 4-eyes approval, voice calls with 5 balanced voices men/women flowing conversation client does actions, remote verification encrypted session ID recording audit, per-tenant policies NovaTech/Bloom/Apex, mock security portals, HMAC-signed hash-chained tamper-evident audit, desktop PWA+Electron",
   applicationName: "Chokepoint",
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
-  manifest: "/manifest.webmanifest",
+  manifest: "/manifest.json",
   icons: {
     icon: "/icon.svg",
     apple: "/icon.svg",
   },
   openGraph: {
-    title: "Chokepoint — Least-Privilege Access Control",
+    title: "Chokepoint v2.0 — Live Security Operations with Voice Approvals",
     description:
-      "Role separation, dual-control, hash-chained tamper-evident audit log, and anomaly detection for sensitive operations and AI agents.",
+      "Real-time endless requests, voice approvals 5 balanced voices, remote verification 100% real PC feel, per-tenant policies, mock portals, HMAC-signed tamper-evident, desktop PWA+Electron",
     type: "website",
   },
 };
