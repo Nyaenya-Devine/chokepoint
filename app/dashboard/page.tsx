@@ -1,281 +1,193 @@
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { store } from "@/lib/store";
-import { getSessionUid } from "@/lib/session";
-import {
-  Gauge,
-  Activity,
-  ShieldCheck,
-  Lock,
-  AlertTriangle,
-  KeyRound,
-  UserCog,
-  ArrowRight,
-  ShieldAlert,
-  CheckCircle2,
-} from "lucide-react";
-import { AreaChart, Donut, BarList, MiniBars, SEV_COLOR } from "@/components/charts";
+/**
+ * Dashboard v2.0 — OrbitDesk-inspired clean bento, real-time endless requests, voice approvals
+ * Linear dark-first violet, Stripe gradient mesh, Intercom human bubbles, Notion warmth, Vercel restraint
+ * Not basic AI — human feel, 5 balanced voices, per-tenant policies, remote verification
+ */
 
-const sevClass: Record<string, string> = {
-  CRITICAL: "badge-risk-critical",
-  HIGH: "badge-risk-high",
-  MEDIUM: "badge-risk-medium",
-  LOW: "badge-risk-low",
-};
+'use client';
 
-function timeAgo(iso: string): string {
-  const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
-  if (s < 60) return `${Math.round(s)}s ago`;
-  if (s < 3600) return `${Math.round(s / 60)}m ago`;
-  return `${Math.round(s / 3600)}h ago`;
-}
+import { useState, useEffect } from 'react';
+import { SecurityDashboard } from '@/src/components/SecurityDashboard';
+import { RequestQueue } from '@/src/components/RequestQueue';
+import { VoiceApprovalCenter } from '@/src/components/VoiceApprovalCenter';
+import { OperatorRoster } from '@/src/components/OperatorRoster';
+import { TenantPolicyCenter } from '@/src/components/TenantPolicyCenter';
+import { RemoteVerification } from '@/src/components/RemoteVerification';
+import { MockSecurityPortals } from '@/src/components/MockSecurityPortals';
+import { requestEngine, type LiveRequest } from '@/src/data/requestEngine';
 
-export default async function DashboardPage() {
-  const uid = await getSessionUid();
-  if (!uid) redirect("/login");
-  const user = store.getUserById(uid);
-  if (!user) redirect("/login");
+type Tab = 'overview' | 'requests' | 'tenants' | 'operators' | 'verification';
 
-  const summary = store.riskSummary();
-  const d = store.dashboard();
-  const recent = store.recent(9);
-  const integrity = store.verify();
+export default function DashboardV2() {
+  const [activeTab, setActiveTab] = useState<Tab>('overview');
+  const [selectedRequest, setSelectedRequest] = useState<LiveRequest | null>(null);
+  const [requests, setRequests] = useState<LiveRequest[]>([]);
 
-  // Severity distribution for the donut.
-  const donutData = [
-    { label: "Critical", value: summary.critical, color: SEV_COLOR.CRITICAL },
-    { label: "High", value: summary.high, color: SEV_COLOR.HIGH },
-    { label: "Medium", value: summary.medium, color: SEV_COLOR.MEDIUM },
-    { label: "Low", value: summary.low, color: SEV_COLOR.LOW },
-  ];
+  useEffect(() => {
+    requestEngine.start();
+    const unsub = requestEngine.subscribe(setRequests);
+    return () => {
+      unsub();
+      requestEngine.stop();
+    };
+  }, []);
 
-  const riskTone =
-    summary.riskIndex >= 50 ? "var(--risk-critical)" : summary.riskIndex >= 25 ? "var(--risk-high)" : "var(--risk-low)";
+  const handleApprove = (id: string, note: string) => {
+    requestEngine.approveRequest(id, 'Nia Owiti', note);
+    setSelectedRequest(prev => prev?.id === id ? { ...prev, status: 'approved' as const } : prev);
+  };
+
+  const handleReject = (id: string, reason: string) => {
+    requestEngine.rejectRequest(id, 'Nia Owiti', reason);
+    setSelectedRequest(prev => prev?.id === id ? { ...prev, status: 'rejected' as const } : prev);
+  };
+
+  const handleExecute = (id: string) => {
+    requestEngine.executeRequest(id, 'Nia Owiti');
+    setSelectedRequest(prev => prev?.id === id ? { ...prev, status: 'executed' as const } : prev);
+  };
+
+  const pendingCount = requests.filter(r => r.status === 'pending').length;
 
   return (
-    <>
-      <div className="topbar">
-        <div>
-          <h1 className="page-title">Security Posture — Overview</h1>
-          <p className="page-sub">Welcome back, {user.displayName}. Live controls across your sensitive operations.</p>
-        </div>
-        <div className="row">
-          <span className={`badge ${integrity.valid ? "badge-ok" : "badge-risk-critical"}`}>
-            <ShieldCheck size={12} /> {integrity.valid ? "Chain intact" : "Tampering!"}
-          </span>
-          <span className="badge badge-role">{user.role}</span>
-        </div>
-      </div>
-
-      {/* ---------- KPI strip ---------- */}
-      <div className="grid grid-4 mb-16">
-        <div className="card kpi">
-          <div className="kpi-head">
-            <span className="kpi-label">Risk index</span>
-            <div className="kpi-ico" style={{ background: "rgba(237,137,54,0.14)", color: "var(--risk-high)" }}>
-              <Gauge size={17} />
+    <div className="min-h-screen bg-[#050507] text-zinc-100">
+      {/* Top bar — OrbitDesk style friendly dark #0a0a0a with emerald pulse */}
+      <div className="sticky top-0 z-40 backdrop-blur-xl bg-[#0a0a0a]/80 border-b border-zinc-800/60">
+        <div className="max-w-[1600px] mx-auto px-4 h-12 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-7 w-7 rounded-lg bg-violet-600 flex items-center justify-center">
+              <span className="text-white font-bold text-[12px]">C</span>
+            </div>
+            <span className="text-[14px] font-semibold tracking-[-0.01em]">Chokepoint</span>
+            <span className="h-4 w-px bg-zinc-800" />
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[11px] font-medium tracking-widest text-zinc-400 uppercase">◍ Chokepoint Lab • Real Voice Approvals • Desktop Installable</span>
             </div>
           </div>
-          <div className="kpi-value" style={{ color: riskTone }}>
-            {summary.riskIndex}
-            <span className="kpi-unit">/100</span>
-          </div>
-          <div className="kpi-delta">
-            {summary.critical} critical · {summary.high} high
-          </div>
-        </div>
-        <div className="card kpi">
-          <div className="kpi-head">
-            <span className="kpi-label">Audit events</span>
-            <div className="kpi-ico" style={{ background: "rgba(79,209,197,0.14)", color: "var(--accent)" }}>
-              <Activity size={17} />
+          
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-zinc-800/60 border border-zinc-700/50">
+              <span className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-zinc-400">{pendingCount} pending • Live endless</span>
             </div>
-          </div>
-          <div className="kpi-value">{d.totals.events}</div>
-          <div className="kpi-delta">hash-chained &amp; signed</div>
-        </div>
-        <div className="card kpi">
-          <div className="kpi-head">
-            <span className="kpi-label">Open mandates</span>
-            <div className="kpi-ico" style={{ background: "rgba(236,201,75,0.14)", color: "var(--risk-medium)" }}>
-              <KeyRound size={17} />
-            </div>
-          </div>
-          <div className="kpi-value">{store.mandates.filter((m) => m.state === "pending").length}</div>
-          <div className="kpi-delta">awaiting dual approval</div>
-        </div>
-        <div className="card kpi">
-          <div className="kpi-head">
-            <span className="kpi-label">Active users</span>
-            <div className="kpi-ico" style={{ background: "rgba(72,187,120,0.14)", color: "var(--risk-low)" }}>
-              <UserCog size={17} />
-            </div>
-          </div>
-          <div className="kpi-value">{store.publicUsers().length}</div>
-          <div className="kpi-delta">
-            {store.publicUsers().filter((u) => u.role === "admin").length} admin · {store.publicUsers().filter((u) => u.role === "operator").length} operator
-          </div>
-        </div>
-      </div>
-
-      {/* ---------- Trend + severity ---------- */}
-      <div className="grid grid-3 mb-16">
-        <div className="card span-2">
-          <div className="row mb-16" style={{ justifyContent: "space-between" }}>
-            <div>
-              <h3 className="mb-0">Risk trend</h3>
-              <p className="card-sub mb-0">Score per audit entry, colored by severity.</p>
-            </div>
-            <span className="badge badge-ok"><Activity size={12} /> live</span>
-          </div>
-          <AreaChart data={d.trend} />
-        </div>
-        <div className="card">
-          <h3>Severity distribution</h3>
-          <p className="card-sub">Across all {summary.total} assessed signals.</p>
-          <div className="row" style={{ alignItems: "center", gap: 18 }}>
-            <Donut data={donutData} size={150} />
-            <div className="donut-legend">
-              {donutData.map((s) => (
-                <div key={s.label} className="legend-row">
-                  <span className="legend-dot" style={{ background: s.color }} />
-                  <span className="legend-label">{s.label}</span>
-                  <span className="legend-val">{s.value}</span>
-                </div>
+            <div className="flex items-center gap-1">
+              {[
+                { label: '5 Voices', color: 'violet' },
+                { label: 'PWA+Electron', color: 'emerald' },
+                { label: 'HMAC-signed', color: 'amber' },
+              ].map(pill => (
+                <span key={pill.label} className={`text-[10px] px-2 py-1 rounded-full bg-${pill.color}-500/10 text-${pill.color}-300 border border-${pill.color}-500/20`}>
+                  {pill.label}
+                </span>
               ))}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* ---------- Activity + alerts ---------- */}
-      <div className="grid grid-3 mb-16">
-        <div className="card span-2">
-          <div className="row mb-16" style={{ justifyContent: "space-between" }}>
-            <div>
-              <h3 className="mb-0">Activity (last hour)</h3>
-              <p className="card-sub mb-0">Events per 10-minute bucket · red shows risky actions.</p>
-            </div>
-            <span className="badge badge-role">{d.totals.privileged} privileged</span>
-          </div>
-          <MiniBars data={d.activity} />
-        </div>
-        <div className="card">
-          <h3>Action breakdown</h3>
-          <p className="card-sub">What the chain has been recording.</p>
-          <BarList data={d.actionBreakdown} />
-        </div>
-      </div>
-
-      {/* ---------- Live alerts + chain integrity ---------- */}
-      <div className="grid grid-3 mb-16">
-        <div className="card span-2">
-          <div className="row mb-16" style={{ justifyContent: "space-between" }}>
-            <div>
-              <h3 className="mb-0">Live alerts</h3>
-              <p className="card-sub mb-0">Highest-severity anomalies in the window.</p>
-            </div>
-            <Link href="/dashboard/risks" className="btn btn-sm btn-ghost">All signals <ArrowRight size={14} /></Link>
-          </div>
-          <div className="grid" style={{ gap: 10 }}>
-            {d.topAlerts.length === 0 ? (
-              <div className="alert alert-ok"><CheckCircle2 size={15} /> No anomalies detected.</div>
-            ) : (
-              d.topAlerts.map((r) => (
-                <div key={r.entryIndex} className="alert alert-info" style={{ alignItems: "flex-start", padding: 12 }}>
-                  <AlertTriangle size={16} style={{ color: SEV_COLOR[r.severity], marginTop: 1 }} />
-                  <div style={{ width: "100%" }}>
-                    <div className="row" style={{ gap: 8 }}>
-                      <span className={`badge ${sevClass[r.severity]}`}>{r.severity}</span>
-                      <span className="mono" style={{ fontSize: 12 }}>entry #{r.entryIndex}</span>
-                      <span className="meta-cell">{r.action} · {r.actor}</span>
-                    </div>
-                    {r.signals.length > 0 && (
-                      <div className="meta-cell" style={{ fontSize: 12, marginTop: 4 }}>
-                        {r.signals[0].reason}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-        <div className="card">
-          <h3>Chain integrity</h3>
-          <p className="card-sub">Tamper-evidence verification.</p>
-          <div className="grid" style={{ gap: 14 }}>
-            <div className="verify-strip">
-              <span className={`badge ${integrity.valid ? "badge-ok" : "badge-risk-critical"}`}>
-                {integrity.valid ? <ShieldCheck size={12} /> : <Lock size={12} />} {integrity.valid ? "intact" : "tampered"}
-              </span>
-            </div>
-            <div>
-              <div className="meta-cell mb-8">Signing scheme</div>
-              <div className="mono" style={{ fontSize: 13, lineHeight: 1.8 }}>
-                SHA-256 hash chain<br />+ HMAC-SHA256 signature
-              </div>
-            </div>
-            <div>
-              <div className="meta-cell mb-8">Genesis hash</div>
-              <div className="hash">{store.ledger[0]?.hash.slice(0, 20) ?? "…"}</div>
-            </div>
-            <a href="/dashboard/audit" className="btn btn-sm">Open audit console</a>
+        {/* Tabs — bento clean */}
+        <div className="max-w-[1600px] mx-auto px-4 h-10 flex items-center gap-1 border-t border-zinc-800/40">
+          {[
+            { id: 'overview', label: 'Overview', icon: '◍', desc: 'Bento clean dashboard' },
+            { id: 'requests', label: 'Live Requests', icon: '◐', desc: `${pendingCount} pending • Voice approvals`, badge: pendingCount },
+            { id: 'tenants', label: 'Tenants', icon: '◑', desc: 'Per-tenant policies like real workplace' },
+            { id: 'operators', label: 'Operators', icon: '◒', desc: 'Conflicts, skills, 44h/week' },
+            { id: 'verification', label: 'Verification', icon: '◓', desc: 'Remote PC + Mock portals' },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as Tab)}
+              className={`h-7 px-3 rounded-lg text-[12px] font-medium flex items-center gap-1.5 border transition-all ${activeTab === tab.id ? 'bg-violet-500/15 text-violet-300 border-violet-500/30' : 'bg-transparent text-zinc-500 border-transparent hover:bg-zinc-800/50 hover:text-zinc-300'}`}
+            >
+              <span>{tab.icon}</span>
+              {tab.label}
+              {tab.badge !== undefined && tab.badge > 0 && (
+                <span className="ml-1 h-4 min-w-[16px] px-1 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center">{tab.badge}</span>
+              )}
+            </button>
+          ))}
+          
+          <div className="ml-auto flex items-center gap-2 text-[11px] text-zinc-600">
+            <span>Linear • Stripe • Intercom • Superhuman • Notion • Vercel inspired</span>
           </div>
         </div>
       </div>
 
-      {/* ---------- Latest risk signal + audit trail ---------- */}
-      <div className="grid grid-2 mb-16">
-        <div className="card">
-          <div className="row mb-8" style={{ justifyContent: "space-between" }}>
-            <h3 className="mb-0">Latest risk signal</h3>
-            <ShieldAlert size={16} style={{ color: "var(--risk-high)" }} />
-          </div>
-          {d.topAlerts[0] ? (
-            <div>
-              <div className="row mb-8">
-                <span className={`badge ${sevClass[d.topAlerts[0].severity]}`}>{d.topAlerts[0].severity}</span>
-                <span className="mono" style={{ fontSize: 12 }}>score {d.topAlerts[0].score.toFixed(2)}</span>
-              </div>
-              <div className="actor-cell">{d.topAlerts[0].actor}</div>
-              <div className="meta-cell mb-16">{d.topAlerts[0].action}</div>
-              <div className="grid" style={{ gap: 8 }}>
-                {d.topAlerts[0].signals.map((s) => (
-                  <div key={s.code} className="alert alert-info" style={{ padding: 8 }}>
-                    <Lock size={14} />
-                    <span>{s.reason}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="alert alert-ok">No anomalies detected.</div>
-          )}
-        </div>
+      {/* Content */}
+      <div className="max-w-[1600px] mx-auto p-4">
+        {activeTab === 'overview' && <SecurityDashboard />}
 
-        <div className="card">
-          <div className="row mb-16" style={{ justifyContent: "space-between" }}>
-            <div>
-              <h3 className="mb-0">Live audit trail</h3>
-              <p className="card-sub mb-0">Most recent tamper-evident events.</p>
+        {activeTab === 'requests' && (
+          <div className="grid grid-cols-12 gap-4 h-[calc(100vh-120px)]">
+            <div className="col-span-4 h-full">
+              <RequestQueue onSelectRequest={setSelectedRequest} selectedId={selectedRequest?.id} />
             </div>
-            <Link href="/dashboard/audit" className="btn btn-sm btn-ghost">Full log</Link>
+            <div className="col-span-8 h-full">
+              <VoiceApprovalCenter request={selectedRequest} onApprove={handleApprove} onReject={handleReject} onExecute={handleExecute} />
+            </div>
           </div>
-          <div className="timeline">
-            {recent.map((e) => (
-              <div className="tl-item" key={e.id}>
-                <div className="tl-time">{timeAgo(e.ts)} · #{e.index}</div>
-                <div className="tl-body">
-                  <span className="act">{e.action}</span>{" "}
-                  <span className="ok">{e.actor}</span>{" "}
-                  <span className="meta-cell">→ {e.target}</span>
+        )}
+
+        {activeTab === 'tenants' && (
+          <div className="h-[calc(100vh-120px)]">
+            <TenantPolicyCenter />
+          </div>
+        )}
+
+        {activeTab === 'operators' && (
+          <div className="grid grid-cols-12 gap-4">
+            <div className="col-span-5">
+              <OperatorRoster />
+            </div>
+            <div className="col-span-7 space-y-4">
+              <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-zinc-800/60">
+                <h3 className="text-[13px] font-semibold text-zinc-100 mb-3">Why Operators Have Conflicts — Like OrbitDesk Agents</h3>
+                <div className="space-y-2.5 text-[12px] leading-[1.5] text-zinc-400">
+                  <p><span className="text-zinc-200 font-medium">Dmitri vs Alex:</span> Alex said Dmitri wastes time escalating easy tickets without checking logs — public shaming in #team-internal. Needs SBI coaching privately, not public.</p>
+                  <p><span className="text-zinc-200 font-medium">Learning gaps:</span> Dmitri escalates easy M365 without Message Trace first. Lisa high CSAT 4.7 but slow FRT 25m needs time management.</p>
+                  <p><span className="text-zinc-200 font-medium">Coaching:</span> Pair Alex mentors Dmitri on Message Trace, shadowing 2 tickets/day, private 1:1 SBI, follow-up 1 week. Priya patient mentor, explains step-by-step, pairs with juniors.</p>
+                  <p><span className="text-zinc-200 font-medium">Real workplace:</span> 44h/week compliance, SLA/CSAT/QA/FRT/MTTR tracked, mood frustrated/calm/happy, workload max, traits, canApprove different per role.</p>
                 </div>
               </div>
-            ))}
+              
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-500/10 via-fuchsia-500/5 to-transparent border border-violet-500/20">
+                <h3 className="text-[13px] font-semibold text-violet-200 mb-2">Training Lab — Like OrbitDesk</h3>
+                <p className="text-[12px] text-zinc-400 leading-[1.4]">Practice approvals with What If, audit logs, Break Glass verification. Each operator different skills 1-10: Entra ID 10, Conditional Access 10, Intune 10, Device Compliance 10, etc. Per-tenant expectations: NovaTech technical concise Correlation IDs, Bloom & Co casual friendly emojis simple steps, Apex Financial formal compliance SEC-2024-07 audit trail.</p>
+                <div className="mt-3 flex gap-1.5">
+                  <span className="text-[10px] px-2 py-1 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/20">SBI Coaching</span>
+                  <span className="text-[10px] px-2 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/20">GROW Model</span>
+                  <span className="text-[10px] px-2 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/20">Shadowing</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'verification' && (
+          <div className="grid grid-cols-12 gap-4 h-[calc(100vh-120px)]">
+            <div className="col-span-6 h-full">
+              <RemoteVerification request={selectedRequest} />
+            </div>
+            <div className="col-span-6 h-full">
+              <MockSecurityPortals request={selectedRequest} />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Footer — subtle legal like OrbitDesk v2.0.2 */}
+      <div className="border-t border-zinc-800/60 bg-[#0a0a0a]/50 mt-8">
+        <div className="max-w-[1600px] mx-auto px-4 py-3 flex items-center justify-between text-[11px] text-zinc-600">
+          <div className="flex items-center gap-4">
+            <span>Chokepoint Lab — Educational simulation, not real security system. HMAC-signed ledger, hash-chained audit, What If verified, Break Glass excluded from CA.</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span>Linear dark-first • Stripe mesh • Intercom bubbles • Superhuman ⌘K • Notion warmth • Vercel restraint</span>
+            <span className="h-3 w-px bg-zinc-800" />
+            <span className="font-mono">v2.0.0 • Military-grade • Zero Trust</span>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
