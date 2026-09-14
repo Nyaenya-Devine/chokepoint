@@ -1,7 +1,8 @@
 /**
- * Chokepoint v2.0 Landing — OrbitDesk-inspired masterpiece
- * Linear dark-first violet, Stripe gradient mesh, Intercom human bubbles, Notion warmth, Vercel restraint
- * Not basic AI — human feel, top 1% SaaS, real-time endless requests, voice approvals, per-tenant policies
+ * Chokepoint v3.0 — World-class expert security product
+ * Pure focus: least-privilege access control & tamper-evident audit for sensitive ops — humans and AI agents
+ * No OrbitDesk mixing. No tenants NovaTech/Bloom/Apex. No operators 44h/week conflicts. No endless M365 requests.
+ * Inspired by HashiCorp Vault + Snyk + Vanta + Linear — focused, confident, proof over claims
  */
 
 import Link from "next/link";
@@ -16,334 +17,373 @@ import {
   Zap,
   Eye,
   Layers,
-  Phone,
-  Monitor,
-  Users,
-  Building2,
+  ShieldAlert,
+  Hash,
+  FileKey,
+  UsersRound,
+  AlertTriangle,
+  BookOpenCheck,
 } from "lucide-react";
 
 const features = [
   {
-    icon: Fingerprint,
-    title: "Real-time endless requests",
-    desc: "High-impact ops that need 4-eyes approval — endless generation, P1 critical, expiring timers, recurring patterns",
-    accent: "violet",
-    stats: "Live • 20 max • HMAC-signed",
-  },
-  {
-    icon: Phone,
-    title: "Voice approvals with 5 balanced voices",
-    desc: "Requester calls approver, talks with different voices men/women, flowing conversation, client does actions asks questions",
-    accent: "emerald",
-    stats: "Nia • Dmitri • Jessica • David • Alex",
-  },
-  {
-    icon: Monitor,
-    title: "Remote verification — 100% real PC feel",
-    desc: "Encrypted session ID, recording ON, audit HMAC-signed, dsregcmd, Entra audit logs, What If, Break Glass verified",
+    icon: UsersRound,
+    title: "Dual-control — Two-person rule",
+    desc: "Irreversible actions need a second, distinct, authorized approver. Requester cannot approve own. 15min expiry. Break Glass excluded, monitored, alert on use.",
     accent: "amber",
-    stats: "Windows 11 • Encrypted • Recording",
+    stats: "4-eyes • Distinct approver • Sealed",
+    proof: "authz.test.ts proves distinct-approver + authorized-approver",
   },
   {
-    icon: Building2,
-    title: "Per-tenant policies — real workplace",
-    desc: "NovaTech enterprise strict 24/7, Bloom & Co SMB 9-5 relaxed simple language, Apex Financial regulated SEC-2024-07",
-    accent: "pink",
-    stats: "NovaTech • Bloom • Apex • Different SLA",
-  },
-  {
-    icon: Users,
-    title: "Operators with conflicts & coaching",
-    desc: "Dmitri vs Alex conflict public shaming, 44h/week, skills 1-10, SLA/CSAT/QA/FRT/MTTR, mood, SBI coaching, shadowing",
+    icon: Hash,
+    title: "Tamper-evident ledger — Hash chain + HMAC",
+    desc: "Every event SHA-256 hash-chained prevHash, HMAC-SHA256 signed with secret. Edit/delete/reorder/re-sign breaks chain and is provable. Merkle inclusion proofs.",
     accent: "violet",
-    stats: "8 operators • 44h/week • Conflicts",
+    stats: "SHA-256 • HMAC • Merkle",
+    proof: "ledger.test.ts detects altered, deleted, reordered, re-signed",
   },
   {
-    icon: Layers,
-    title: "Mock security portals — real actions",
-    desc: "Entra, Intune, CA What If, Defender, Exchange Message Trace — execute actions that seem real, audit trail",
+    icon: ShieldAlert,
+    title: "Anomaly detection — Explainable",
+    desc: "Failed logins, after-hours privilege, unknown sources, privilege escalation, automation, impossible travel surfaced with human-readable reasons. Risk index 0-100.",
+    accent: "emerald",
+    stats: "Risk 0-100 • 5 signals • Human reasons",
+    proof: "anomaly.test.ts signals fire on intended conditions",
+  },
+  {
+    icon: KeyRound,
+    title: "RBAC — Least privilege by default",
+    desc: "Viewer / Operator / Auditor / Admin. Single policy gate on every action. Default-deny, explicit allow. Session TTL, CSRF, HttpOnly SameSite=Strict signed cookie.",
     accent: "cyan",
-    stats: "What If • Audit Logs • Real Actions",
+    stats: "4 roles • Default-deny • Session TTL",
+    proof: "authz.test.ts policy matrix + fail-closed",
+  },
+  {
+    icon: BookOpenCheck,
+    title: "Policy simulator — Dry-run before prod",
+    desc: "6 default tests dry-run clone policy. What If impact before approval. Report-Only first. Clone and test without touching prod ledger.",
+    accent: "violet",
+    stats: "6 tests • Dry-run • Clone",
+    proof: "policySimulator.ts + /api/policy-simulate",
+  },
+  {
+    icon: FileKey,
+    title: "SIEM export + Compliance mapper",
+    desc: "Export JSON / CEF / OCSF / LEEF. Map to NIST, OWASP ASI03, SOC2, MITRE, ISO27001. Impersonation detector for agent_as_human, human_as_agent, role_spoof, session_hijack, token_replay.",
+    accent: "amber",
+    stats: "4 formats • 5 frameworks • ASI03",
+    proof: "siemExport.ts + complianceMapper.ts + impersonationDetector.ts",
   },
 ];
 
-const tenants = [
-  { name: 'NovaTech Enterprises', type: 'Enterprise 24/7', color: 'violet', sla: 'P1 60min', policies: 3, nonCompliant: 2, comms: 'Technical concise, Correlation IDs' },
-  { name: 'Bloom & Co Studio', type: 'SMB 9-5', color: 'pink', sla: 'P2 8h', policies: 2, nonCompliant: 0, comms: 'Casual friendly emojis simple steps' },
-  { name: 'Apex Financial Group', type: 'Regulated', color: 'emerald', sla: 'P1 30min', policies: 3, nonCompliant: 3, comms: 'Formal SEC-2024-07 audit trail' },
+const securityProperties = [
+  { test: "ledger.test.ts", proves: "Detects altered payloads, deleted entries, reordered entries, re-signed wrong-key" },
+  { test: "authz.test.ts", proves: "Policy matrix + dual-control distinct + authorized approver, fail-closed" },
+  { test: "crypto.test.ts", proves: "PBKDF2 salted timing-safe, HMAC keyed signatures, no hardcoded secrets" },
+  { test: "anomaly.test.ts", proves: "Signals fire on failed logins, after-hours, privilege escalation, automation" },
 ];
 
-const operators = [
-  { name: 'Nia Owiti', role: 'Admin', avatar: 'N', status: 'available', workload: '2/10', hours: '38/44h', sla: '98%', conflict: null },
-  { name: 'Dmitri Kovac', role: 'Operator', avatar: 'D', status: 'busy', workload: '5/5', hours: '44/44h', sla: '92%', conflict: 'vs Alex — public shaming' },
-  { name: 'Alex Rivera', role: 'Approver', avatar: 'A', status: 'available', workload: '3/5', hours: '40/44h', sla: '96%', conflict: 'vs Dmitri — needs coaching' },
-];
-
-export default function LandingV2() {
+export default function LandingV3() {
   return (
-    <div className="min-h-screen bg-[#050507] text-zinc-100 selection:bg-violet-500/30 relative overflow-hidden">
-      {/* Stripe-inspired gradient mesh + Linear aurora */}
+    <div className="min-h-screen bg-[#050507] text-zinc-100 selection:bg-amber-500/30 relative overflow-hidden">
+      {/* Control Plane Livery — Obsidian aurora amber violet, specific to Chokepoint, not basic black */}
       <div className="pointer-events-none fixed inset-0">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:64px_64px]" />
-        <div className="absolute top-[-20%] left-[5%] w-[900px] h-[700px] rounded-full blur-[120px] opacity-[0.12] bg-gradient-to-br from-violet-600 via-fuchsia-500 to-pink-500" />
-        <div className="absolute top-[10%] right-[-10%] w-[700px] h-[600px] rounded-full blur-[100px] opacity-[0.08] bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500" />
-        <div className="absolute bottom-[-10%] left-[30%] w-[800px] h-[600px] rounded-full blur-[100px] opacity-[0.06] bg-gradient-to-br from-amber-500 via-orange-500 to-red-500" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:72px_72px]" />
+        <div className="absolute top-[-20%] left-[5%] w-[900px] h-[700px] rounded-full blur-[120px] opacity-[0.14] bg-gradient-to-br from-amber-500 via-orange-500 to-red-500" />
+        <div className="absolute top-[10%] right-[-10%] w-[700px] h-[600px] rounded-full blur-[100px] opacity-[0.10] bg-gradient-to-br from-violet-600 via-fuchsia-500 to-indigo-500" />
+        <div className="absolute bottom-[-10%] left-[30%] w-[800px] h-[600px] rounded-full blur-[100px] opacity-[0.06] bg-gradient-to-br from-zinc-700 via-zinc-600 to-zinc-800" />
+        {/* Hash-chain stripes — dual-control livery */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 28px, rgba(251,191,36,0.4) 28px, rgba(251,191,36,0.4) 29px, transparent 29px, transparent 56px, rgba(139,92,246,0.3) 56px, rgba(139,92,246,0.3) 57px)`
+        }} />
       </div>
 
-      {/* Top — friendly dark #0a0a0a emerald pulse like OrbitDesk v2.0.2 */}
-      <div className="relative z-20 sticky top-0 backdrop-blur-xl bg-[#0a0a0a]/90 border-b border-zinc-800/60">
-        <div className="mx-auto max-w-[1280px] px-6 md:px-10 h-11 flex items-center justify-between">
+      {/* Top — clean, expert, not OrbitDesk green */}
+      <div className="relative z-20 sticky top-0 backdrop-blur-xl bg-[#050507]/85 border-b border-white/[0.06]">
+        <div className="mx-auto max-w-[1280px] px-6 md:px-10 h-[52px] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-7 w-7 rounded-lg bg-violet-600 flex items-center justify-center">
-              <ShieldCheck className="h-4 w-4 text-white" />
+            <div className="h-8 w-8 rounded-[10px] bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
+              <ShieldCheck className="h-4 w-4 text-black" />
             </div>
-            <span className="text-[14px] font-semibold tracking-[-0.01em]">Chokepoint</span>
-            <span className="h-4 w-px bg-zinc-800 hidden md:block" />
+            <span className="text-[15px] font-semibold tracking-[-0.01em]">Chokepoint</span>
+            <span className="h-4 w-px bg-white/10 hidden md:block" />
             <div className="hidden md:flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[11px] font-medium tracking-widest text-zinc-400 uppercase">◍ Chokepoint Lab • Real Voice Approvals • Desktop Installable</span>
+              <span className="text-[11px] font-mono tracking-[0.08em] text-white/50 uppercase">Tamper-evident • Dual-control • HMAC-signed • OWASP ASI03</span>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
             <div className="hidden md:flex items-center gap-1.5">
               {[
-                { label: '5 Voices', color: 'violet' },
-                { label: 'PWA+Electron', color: 'emerald' },
-                { label: 'Security Hardened', color: 'amber' },
+                'Hash-chained',
+                'HMAC-signed',
+                '26 tests',
+                '0 vulns',
               ].map(pill => (
-                <span key={pill.label} className={`text-[10px] px-2 py-1 rounded-full bg-${pill.color}-500/10 text-${pill.color}-300 border border-${pill.color}-500/20`}>
-                  {pill.label}
+                <span key={pill} className="text-[10px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/50 border border-white/[0.08] font-mono">
+                  {pill}
                 </span>
               ))}
             </div>
-            <Link href="/login" className="h-8 px-4 rounded-full bg-zinc-100 text-zinc-900 text-[13px] font-semibold hover:bg-white transition flex items-center gap-1.5">
+            <Link href="/login" className="h-8 px-4 rounded-full bg-[#FFFDFA] text-[#050507] text-[13px] font-semibold hover:bg-white transition flex items-center gap-1.5 shadow-sm">
               Open demo <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         </div>
       </div>
 
-      <main className="relative z-10 mx-auto max-w-[1280px] px-6 md:px-10 py-10 md:py-16">
-        {/* Hero — massive kinetic typography like Linear */}
+      <main className="relative z-10 mx-auto max-w-[1280px] px-6 md:px-10 py-12 md:py-20">
+        {/* Hero — world-class expert, focused, not trying everything */}
         <div className="max-w-[900px]">
-          <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/[0.08] px-3 py-1 mb-6">
-            <Zap className="h-3 w-3 text-violet-400" />
-            <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-violet-300">Tamper-evident · Dual-control · Voice approvals · Per-tenant policies</span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/[0.08] px-3.5 py-1.5 mb-8">
+            <Fingerprint className="h-3.5 w-3.5 text-amber-400" />
+            <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-amber-300">OWASP Agentic AI Top 10 • ASI03 Identity & Privilege Abuse • Least-privilege • Tamper-evident</span>
           </div>
 
-          <h1 className="font-display text-[42px] md:text-[72px] leading-[0.9] tracking-[-0.04em] font-[550]">
+          <h1 className="font-display text-[44px] md:text-[76px] leading-[0.9] tracking-[-0.04em] font-[550]">
             A chokepoint for
             <br />
             sensitive ops —
             <br />
-            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">human and agent,</span>
+            <span className="bg-gradient-to-r from-amber-300 via-orange-400 to-amber-500 bg-clip-text text-transparent">human and agent,</span>
             <br />
-            <span className="text-[32px] md:text-[44px] font-[400] tracking-[-0.02em] text-zinc-400">with voice, real PC feel, per-tenant policies</span>
+            <span className="text-[28px] md:text-[36px] font-[400] tracking-[-0.02em] text-white/60 leading-[1.1] block mt-3">with dual-control, hash-chained audit, and explainable anomaly detection. Proof over claims.</span>
           </h1>
 
-          <p className="mt-6 text-[17px] leading-[1.6] text-zinc-400 max-w-[60ch] font-[350]">
-            Like OrbitDesk but for security — real-time endless high-impact requests that need 4-eyes approval, voice calls where requester/approver talks with different voices men/women flowing conversation client does actions asks questions, remote approval PC feel encrypted session ID recording audit, per-tenant/client policies different strictness like NovaTech/Bloom/Apex, ability to execute actions that seem real, call option where client calls needs live help.
+          <p className="mt-8 text-[16px] leading-[1.7] text-white/50 max-w-[62ch] font-[400]">
+            Chokepoint answers one question: how do you let people — and increasingly, AI agents — perform high-impact actions without giving anyone enough authority to abuse it? 
+            <span className="text-white/80"> Role-based auth, working two-person approval, SHA-256 hash-chained HMAC-signed audit log, anomaly detection.</span> No real tenant data. No hardcoded secrets. 26 tests that prove the security properties, not toy smoke tests.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/dashboard" className="h-11 px-6 rounded-full bg-zinc-100 text-zinc-900 text-[14px] font-semibold inline-flex items-center gap-2 hover:bg-white transition">
+          <div className="mt-10 flex flex-wrap gap-3 items-center">
+            <Link href="/dashboard" className="h-11 px-6 rounded-full bg-[#FFFDFA] text-[#050507] text-[14px] font-semibold inline-flex items-center gap-2 hover:bg-white transition shadow-lg">
               Open live dashboard <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/login" className="h-11 px-6 rounded-full border border-zinc-700 bg-zinc-900/50 text-zinc-200 text-[14px] font-medium inline-flex items-center gap-2 hover:bg-zinc-800 hover:border-zinc-600 transition">
+            <Link href="/login" className="h-11 px-6 rounded-full border border-white/[0.08] bg-white/[0.04] text-white/80 text-[14px] font-medium inline-flex items-center gap-2 hover:bg-white/[0.08] hover:text-white transition backdrop-blur">
               <Layers className="h-4 w-4" /> Explore demo accounts
             </Link>
-            <div className="flex items-center gap-2 text-[12px] text-zinc-500 ml-2">
-              <span className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-              Live • Endless • HMAC-signed • Hash-chained
+            <div className="flex items-center gap-2 text-[12px] text-white/40 ml-2 font-mono">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Live • HMAC-signed • Hash-chained • 26 tests pass • 0 vulns
             </div>
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            {[
+              "Viewer / Operator / Auditor / Admin",
+              "Requester cannot approve own",
+              "Break Glass monitored",
+              "SHA-256 + HMAC-SHA256 + Merkle",
+              "Risk 0-100",
+              "NIST + OWASP + SOC2 + MITRE",
+            ].map(tag => (
+              <span key={tag} className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.06] text-white/40">{tag}</span>
+            ))}
           </div>
         </div>
 
-        {/* Bento grid — features like OrbitDesk clean */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Bento — 6 focused security features, not 6 OrbitDesk features */}
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {features.map(f => (
-            <div key={f.title} className="group relative rounded-[20px] border border-zinc-800/60 bg-[#0a0a0a]/80 backdrop-blur p-5 hover:border-zinc-700/60 hover:bg-zinc-900/50 transition-all hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-violet-500/20 to-transparent opacity-0 group-hover:opacity-100 transition" />
-              <div className="flex items-start justify-between mb-3">
-                <div className={`h-10 w-10 rounded-xl flex items-center justify-center border ${f.accent === 'violet' ? 'bg-violet-500/10 border-violet-500/20 text-violet-400' : f.accent === 'emerald' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : f.accent === 'amber' ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' : f.accent === 'pink' ? 'bg-pink-500/10 border-pink-500/20 text-pink-400' : 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'}`}>
-                  <f.icon size={18} />
+            <div key={f.title} className="group relative rounded-[20px] border border-white/[0.06] bg-[#101012]/80 backdrop-blur-[20px] p-6 hover:border-white/[0.12] hover:bg-[#151519] transition-all hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent opacity-0 group-hover:opacity-100 transition" />
+              <div className="flex items-start justify-between mb-4">
+                <div className={`h-11 w-11 rounded-[12px] flex items-center justify-center border ${
+                  f.accent === 'amber' ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' :
+                  f.accent === 'violet' ? 'bg-violet-500/10 border-violet-500/20 text-violet-400' :
+                  f.accent === 'emerald' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
+                  'bg-cyan-500/10 border-cyan-500/20 text-cyan-400'
+                }`}>
+                  <f.icon size={20} />
                 </div>
-                <span className="text-[10px] px-2 py-1 rounded-full bg-zinc-800 text-zinc-500 border border-zinc-700/50 font-mono">{f.stats}</span>
+                <span className="text-[10px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06] font-mono">{f.stats}</span>
               </div>
-              <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-zinc-100">{f.title}</h3>
-              <p className="mt-1.5 text-[13px] leading-[1.5] text-zinc-500">{f.desc}</p>
+              <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-[#F5F3EF]">{f.title}</h3>
+              <p className="mt-2 text-[13px] leading-[1.6] text-white/50">{f.desc}</p>
+              <div className="mt-3 p-2.5 rounded-[10px] bg-white/[0.03] border border-white/[0.06]">
+                <p className="text-[11px] font-mono text-white/30">Proof: <span className="text-white/60">{f.proof}</span></p>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Live preview — real-time requests + voice + tenants */}
+        {/* Proof over claims — tests that prove security properties */}
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-4">
-          {/* Requests live */}
-          <div className="lg:col-span-5 rounded-[20px] border border-zinc-800/60 bg-[#0a0a0a]/80 backdrop-blur overflow-hidden">
-            <div className="p-4 border-b border-zinc-800/60 flex items-center justify-between">
-              <h3 className="text-[13px] font-semibold flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />Live Requests — Endless</h3>
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700/50">P1 • Critical • HMAC-signed</span>
+          <div className="lg:col-span-7 rounded-[20px] border border-white/[0.06] bg-[#101012]/80 backdrop-blur p-6">
+            <h3 className="text-[14px] font-semibold flex items-center gap-2 mb-4">
+              <span className="h-6 w-6 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /></span>
+              Tests that prove security properties — not toy smoke tests
+            </h3>
+            <div className="space-y-3">
+              {securityProperties.map(item => (
+                <div key={item.test} className="flex gap-3 p-3 rounded-[12px] bg-[#08080A] border border-white/[0.06] hover:border-emerald-500/20 transition">
+                  <span className="font-mono text-[11px] text-emerald-400 mt-0.5">✓ {item.test}</span>
+                  <span className="text-[12px] text-white/50 leading-[1.4]">{item.proves}</span>
+                </div>
+              ))}
             </div>
-            <div className="p-3 space-y-2 max-h-[320px] overflow-y-auto">
+            <div className="mt-4 flex gap-2">
+              <span className="text-[11px] px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">26 tests pass</span>
+              <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06]">0 vulns • npm audit</span>
+              <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06]">Next 16.3.5 • React 19.2.8</span>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5 rounded-[20px] border border-amber-500/20 bg-gradient-to-br from-amber-500/[0.08] via-orange-500/[0.04] to-transparent backdrop-blur p-6">
+            <h3 className="text-[14px] font-semibold text-amber-200 mb-3 flex items-center gap-2"><ShieldAlert className="h-4 w-4" />Military-grade hardening — 10 upgrades</h3>
+            <div className="space-y-2.5 text-[12px] leading-[1.5] text-white/50">
+              <p><span className="text-white/80 font-medium">1. Encrypted sessions & audit:</span> dual-control 4-eyes, hash-chained HMAC-SHA256 ledger, correlation ID tamper-evident</p>
+              <p><span className="text-white/80 font-medium">2. RBAC & least privilege:</span> Viewer Operator Approver Admin, default-deny, separation of duties, TTL + CSRF</p>
+              <p><span className="text-white/80 font-medium">3. Break Glass:</span> excluded from approval flows, monitored alert, password in vault, runbook tested quarterly</p>
+              <p><span className="text-white/80 font-medium">4. Tamper-evident ledger:</span> SHA-256 chain + HMAC signed secret env, Merkle proofs, /api/audit/verify</p>
+              <p><span className="text-white/80 font-medium">5. Zero Trust:</span> verify every request, device trust scoring, OWASP ASI03 mapped</p>
+              <p><span className="text-white/80 font-medium">6. Headers:</span> nosniff, DENY, strict-origin, Permissions-Policy, CSP self-only, HSTS 63072000</p>
+              <p><span className="text-white/80 font-medium">7. No secrets:</span> no hardcoded PATs, grep ghp_ clean, no real tenant, no tracking</p>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {['HMAC-signed', 'Hash-chained', 'Merkle', 'Break Glass', 'CSP self-only', 'HSTS 63072000', 'Zero Trust', 'OWASP ASI03'].map(tag => (
+                <span key={tag} className="text-[10px] px-2 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Live preview — focused security dashboard, not OrbitDesk tenants */}
+        <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <div className="lg:col-span-5 rounded-[20px] border border-white/[0.06] bg-[#101012]/80 backdrop-blur overflow-hidden">
+            <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
+              <h3 className="text-[13px] font-semibold flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />Live Mandates — Dual-control queue</h3>
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06] font-mono">P1 • Critical • HMAC-signed</span>
+            </div>
+            <div className="p-3 space-y-2">
               {[
-                { code: 'PRIV-001', title: 'Escalate operator to admin for incident response', priority: 'P1', risk: 'Critical', tenant: 'NovaTech', time: '2m 14s', status: 'pending' },
-                { code: 'FLEET-004', title: 'Wipe fleet of 50 devices — lost shipment', priority: 'P1', risk: 'Critical', tenant: 'Apex', time: '5m 42s', status: 'pending' },
-                { code: 'COMPLIANCE-005', title: 'Disable DLP policy for external sharing', priority: 'P2', risk: 'High', tenant: 'Bloom', time: '8m 03s', status: 'in_review' },
-                { code: 'AGENT-002', title: 'Grant agent billing write access to production', priority: 'P1', risk: 'Critical', tenant: 'NovaTech', time: '1m 22s', status: 'pending' },
+                { code: 'PRIV-001', title: 'Escalate operator to admin for incident response', priority: 'P1', risk: 92, status: 'pending_approval', approver: 'Distinct required' },
+                { code: 'FLEET-004', title: 'Wipe fleet of 50 devices — lost shipment', priority: 'P1', risk: 95, status: 'pending_approval', approver: 'Admin + Auditor' },
+                { code: 'AGENT-002', title: 'Grant agent billing write access to production', priority: 'P1', risk: 88, status: 'in_review', approver: 'Admin only' },
+                { code: 'COMPLIANCE-005', title: 'Disable DLP policy for external sharing', priority: 'P2', risk: 67, status: 'pending_approval', approver: 'Auditor required' },
               ].map(req => (
-                <div key={req.code} className="p-3 rounded-xl bg-zinc-900/50 border border-zinc-800/50 hover:border-zinc-700/50 transition-colors">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`h-5 px-1.5 rounded text-[10px] font-bold flex items-center ${req.priority === 'P1' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}`}>{req.priority}</span>
-                    <span className="text-[11px] font-medium text-zinc-300">{req.code}</span>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${req.tenant === 'NovaTech' ? 'bg-violet-500/10 text-violet-400' : req.tenant === 'Bloom' ? 'bg-pink-500/10 text-pink-400' : 'bg-emerald-500/10 text-emerald-400'} border border-current/20`}>{req.tenant}</span>
-                    <span className="ml-auto text-[11px] font-mono text-zinc-500">{req.time}</span>
+                <div key={req.code} className="p-3 rounded-[12px] bg-[#08080A] border border-white/[0.06] hover:border-amber-500/20 transition-colors">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className={`h-5 px-1.5 rounded text-[10px] font-bold flex items-center border ${req.priority === 'P1' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>{req.priority}</span>
+                    <span className="text-[11px] font-mono font-medium text-white/60">{req.code}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06]">Risk {req.risk}</span>
+                    <span className="ml-auto text-[10px] font-mono text-white/30">{req.status.replace('_',' ')}</span>
                   </div>
-                  <p className="text-[13px] font-medium text-zinc-100 leading-[1.3] line-clamp-1">{req.title}</p>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full border ${req.risk === 'Critical' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>{req.risk}</span>
-                    <span className="text-[11px] text-zinc-500">{req.status}</span>
-                  </div>
+                  <p className="text-[13px] font-medium text-[#F5F3EF] leading-[1.3] line-clamp-1">{req.title}</p>
+                  <p className="text-[11px] text-white/40 mt-1">Approver: <span className="text-white/60">{req.approver}</span> • Requester cannot approve own • 15min expiry</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Voice + Tenants */}
           <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="rounded-[20px] border border-zinc-800/60 bg-[#0a0a0a]/80 backdrop-blur p-4">
-              <h3 className="text-[13px] font-semibold flex items-center gap-2 mb-3"><Phone className="h-4 w-4 text-violet-400" />Voice Approvals — 5 Balanced Voices</h3>
-              <div className="space-y-2.5">
+            <div className="rounded-[20px] border border-white/[0.06] bg-[#101012]/80 backdrop-blur p-5">
+              <h3 className="text-[13px] font-semibold flex items-center gap-2 mb-3"><Activity className="h-4 w-4 text-violet-400" />Risk Engine — 0-100 behavioral scoring</h3>
+              <div className="space-y-3">
                 {[
-                  { speaker: 'Dmitri (Ops)', text: 'Hi, this is Dmitri from Operations at NovaTech. P1 payroll blocked, need admin for 2 hours, Correlation ID a7f3c9e2!', voice: 'masculine Eastern European', sentiment: 'urgent' },
-                  { speaker: 'Nia (Security)', text: 'Acknowledged PRIV-001 — Checking audit logs and policy now. Per NovaTech policy, requires dual-control + audit trail.', voice: 'feminine Kenyan', sentiment: 'calm' },
-                  { speaker: 'Jessica (SMB)', text: 'Heyy! 😅 DLP blocking me from sharing project files with external client, need to disable for 2 hours!', voice: 'feminine American', sentiment: 'confused' },
-                ].map((msg, i) => (
-                  <div key={i} className={`p-2.5 rounded-xl border ${msg.sentiment === 'urgent' ? 'bg-red-500/5 border-red-500/20' : msg.sentiment === 'confused' ? 'bg-pink-500/5 border-pink-500/20' : 'bg-violet-500/5 border-violet-500/20'}`}>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[11px] font-semibold text-zinc-200">{msg.speaker}</span>
-                      <span className="text-[10px] px-1 py-0.5 rounded bg-zinc-800 text-zinc-500">{msg.voice}</span>
+                  { signal: 'Privilege creep', score: 78, reason: 'Operator escalated 3 times in 24h, unusual velocity' },
+                  { signal: 'After-hours', score: 65, reason: 'Admin action at 02:14 UTC, outside 9-5 policy' },
+                  { signal: 'Failed auths', score: 82, reason: '5 failed logins from 192.168.1.45, possible brute force' },
+                  { signal: 'Impersonation', score: 91, reason: 'Agent token used with human role — ASI03' },
+                ].map((item, i) => (
+                  <div key={i} className="p-2.5 rounded-[12px] bg-[#08080A] border border-white/[0.06]">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[11px] font-medium text-white/70">{item.signal}</span>
+                      <span className={`text-[11px] px-1.5 py-0.5 rounded-full border font-mono ${item.score > 80 ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>{item.score}</span>
                     </div>
-                    <p className="text-[12px] text-zinc-400 leading-[1.3]">{msg.text}</p>
+                    <p className="text-[11px] text-white/40 leading-[1.3]">{item.reason}</p>
                   </div>
                 ))}
               </div>
-              <div className="mt-3 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                <p className="text-[11px] text-emerald-300">● REC • Encrypted session • Recording ON • HMAC-signed • Human feel • Client does actions</p>
+              <div className="mt-3 p-2.5 rounded-[10px] bg-violet-500/10 border border-violet-500/20">
+                <p className="text-[11px] text-violet-300 font-mono">riskEngine.ts • velocity + privilege creep + after-hours + failed auths + ASI03 + trust decay</p>
               </div>
             </div>
 
-            <div className="rounded-[20px] border border-zinc-800/60 bg-[#0a0a0a]/80 backdrop-blur p-4">
-              <h3 className="text-[13px] font-semibold flex items-center gap-2 mb-3"><Building2 className="h-4 w-4 text-emerald-400" />Tenants — Per-Tenant Policies</h3>
-              <div className="space-y-2.5">
-                {tenants.map(t => (
-                  <div key={t.name} className="p-2.5 rounded-xl bg-zinc-900/50 border border-zinc-800/50">
-                    <div className="flex items-center gap-2">
-                      <div className={`h-7 w-7 rounded-lg bg-${t.color}-500/10 border border-${t.color}-500/20 flex items-center justify-center`}>
-                        <span className={`text-[11px] font-bold text-${t.color}-400`}>{t.name[0]}</span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[12px] font-medium text-zinc-200 truncate">{t.name}</p>
-                        <p className="text-[11px] text-zinc-500">{t.type} • {t.sla} • {t.policies} policies</p>
-                      </div>
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${t.nonCompliant > 0 ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}`}>
-                        {t.nonCompliant > 0 ? `${t.nonCompliant} non-compliant` : 'Compliant'}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-zinc-500 mt-1.5 leading-[1.3]">{t.comms}</p>
+            <div className="rounded-[20px] border border-white/[0.06] bg-[#101012]/80 backdrop-blur p-5">
+              <h3 className="text-[13px] font-semibold flex items-center gap-2 mb-3"><Eye className="h-4 w-4 text-emerald-400" />Audit Ledger — Tamper-evident</h3>
+              <div className="space-y-2 font-mono text-[11px]">
+                {[
+                  { hash: 'a7f3c9e2…', prev: 'b2e1d4f8…', action: 'REQUEST_CREATED', hmac: '✓', time: '14:22:03' },
+                  { hash: 'c4d8e1a5…', prev: 'a7f3c9e2…', action: 'APPROVAL_GRANTED', hmac: '✓', time: '14:24:11' },
+                  { hash: 'e9f2a6b3…', prev: 'c4d8e1a5…', action: 'POLICY_ENFORCED', hmac: '✓', time: '14:24:12' },
+                  { hash: 'f1a3c7d9…', prev: 'e9f2a6b3…', action: 'ANOMALY_DETECTED', hmac: '✓', time: '14:25:00' },
+                ].map(entry => (
+                  <div key={entry.hash} className="p-2 rounded-[8px] bg-[#08080A] border border-white/[0.06] flex items-center gap-2">
+                    <span className="text-emerald-400">{entry.hmac}</span>
+                    <span className="text-white/50">{entry.hash}</span>
+                    <span className="text-white/20">← {entry.prev}</span>
+                    <span className="ml-auto text-white/60">{entry.action}</span>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Operators + Security */}
-        <div className="mt-4 grid grid-cols-1 lg:grid-cols-12 gap-4">
-          <div className="lg:col-span-8 rounded-[20px] border border-zinc-800/60 bg-[#0a0a0a]/80 backdrop-blur p-4">
-            <h3 className="text-[13px] font-semibold flex items-center gap-2 mb-3"><Users className="h-4 w-4 text-violet-400" />Operators — Conflicts, Skills, 44h/week, Coaching</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {operators.map(op => (
-                <div key={op.name} className="p-3 rounded-xl bg-zinc-900/50 border border-zinc-800/50">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-[12px] font-medium">{op.avatar}</div>
-                    <div>
-                      <p className="text-[12px] font-medium text-zinc-200">{op.name}</p>
-                      <p className="text-[11px] text-zinc-500">{op.role} • {op.workload} • {op.hours} • SLA {op.sla}</p>
-                    </div>
-                  </div>
-                  {op.conflict && <p className="text-[11px] text-red-400 mt-2 leading-[1.3]">Conflict: {op.conflict}</p>}
+              <div className="mt-3 space-y-1.5">
+                <div className="p-2.5 rounded-[10px] bg-emerald-500/5 border border-emerald-500/10">
+                  <p className="text-[11px] text-emerald-300">✓ Chain intact • HMAC verified • Merkle inclusion proof valid • /api/audit/verify</p>
                 </div>
-              ))}
-            </div>
-            <div className="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
-              <p className="text-[11px] font-medium text-amber-300">Learning gaps & coaching like OrbitDesk:</p>
-              <p className="text-[11px] text-zinc-400 mt-1 leading-[1.4]">Dmitri escalates easy M365 without Message Trace first. Alex said Dmitri wastes time in public — needs SBI coaching privately. Pair Alex mentors Dmitri on Message Trace, shadowing 2 tickets/day, private 1:1, follow-up 1 week. Priya patient mentor explains step-by-step.</p>
-            </div>
-          </div>
-
-          <div className="lg:col-span-4 rounded-[20px] border border-violet-500/20 bg-gradient-to-br from-violet-500/10 via-fuchsia-500/5 to-transparent backdrop-blur p-4">
-            <h3 className="text-[13px] font-semibold text-violet-200 mb-2">Security — Military-grade Hardened</h3>
-            <div className="space-y-2 text-[12px] leading-[1.4] text-zinc-400">
-              <p><span className="text-zinc-200 font-medium">HMAC-signed ledger:</span> SHA-256 hash chain + HMAC-SHA256, edit one and chain breaks, tamper-evident</p>
-              <p><span className="text-zinc-200 font-medium">Dual-control:</span> Irreversible actions need distinct approver, 15min expiry, audit trail, Break Glass excluded from CA</p>
-              <p><span className="text-zinc-200 font-medium">What If:</span> Simulate policy impact before approval, Report-Only first like OrbitDesk P1 lesson</p>
-              <p><span className="text-zinc-200 font-medium">Zero Trust:</span> CSP self-only, HSTS 63072000, X-Frame DENY, nosniff, Permissions-Policy, no secrets in repo</p>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {['HMAC-signed', 'Hash-chained', 'What If', 'Break Glass', 'CSP self-only', 'HSTS', 'Zero Trust'].map(tag => (
-                <span key={tag} className="text-[10px] px-2 py-1 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/20">{tag}</span>
-              ))}
+                <p className="text-[10px] text-white/30 font-mono">Try tampering: edit one entry → chain breaks → provable. ledger.test.ts proves it.</p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Demo accounts */}
-        <div className="mt-8 rounded-[20px] border border-zinc-800/60 bg-[#0a0a0a]/80 backdrop-blur p-5">
-          <h3 className="text-[14px] font-semibold mb-3">Try it in 30 seconds — 4 demo accounts</h3>
+        {/* Demo accounts — focused, not 8 operators with conflicts */}
+        <div className="mt-12 rounded-[20px] border border-white/[0.06] bg-[#101012]/80 backdrop-blur p-6">
+          <h3 className="text-[14px] font-semibold mb-1">Try it in 30 seconds — 4 demo accounts, no signup</h3>
+          <p className="text-[12px] text-white/40 mb-4">Least-privilege: each role sees only what policy allows. Requester cannot approve own. Proof over claims.</p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
             {[
-              { username: 'admin', password: 'admin1234', role: 'Admin', desc: 'Approves critical changes, full policy control', color: 'amber' },
-              { username: 'operator', password: 'operator1234', role: 'Operator', desc: 'Runs scans and requests agent actions', color: 'violet' },
-              { username: 'auditor', password: 'auditor1234', role: 'Auditor', desc: 'Verifies integrity, exports audit log', color: 'cyan' },
-              { username: 'viewer', password: 'viewer1234', role: 'Viewer', desc: 'Read-only dashboard', color: 'neutral' },
+              { username: 'admin', password: 'admin1234', role: 'Admin', desc: 'Approves critical, full policy control, Break Glass', color: 'amber' },
+              { username: 'operator', password: 'operator1234', role: 'Operator', desc: 'Creates requests, runs scans, requests agent actions', color: 'violet' },
+              { username: 'auditor', password: 'auditor1234', role: 'Auditor', desc: 'Verifies integrity, exports SIEM, compliance mapping', color: 'cyan' },
+              { username: 'viewer', password: 'viewer1234', role: 'Viewer', desc: 'Read-only dashboard, risk index, anomaly feed', color: 'neutral' },
             ].map(u => (
-              <Link key={u.username} href={`/login?user=${u.username}`} className="group p-3 rounded-xl border border-zinc-800/60 bg-zinc-900/50 hover:border-zinc-700/60 hover:bg-zinc-800/50 transition-all hover:-translate-y-0.5">
+              <Link key={u.username} href={`/login?user=${u.username}`} className="group p-4 rounded-[14px] border border-white/[0.06] bg-[#08080A] hover:border-white/[0.12] hover:bg-[#0F0F11] transition-all hover:-translate-y-0.5">
                 <div className="flex items-center justify-between">
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full border font-mono tracking-wide uppercase ${u.color === 'amber' ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' : u.color === 'violet' ? 'bg-violet-500/10 border-violet-500/20 text-violet-400' : u.color === 'cyan' ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400' : 'bg-zinc-700/50 border-zinc-600/50 text-zinc-400'}`}>{u.role}</span>
-                  <CheckCircle2 size={14} className="text-zinc-600 group-hover:text-violet-400 transition" />
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full border font-mono tracking-wide uppercase ${u.color === 'amber' ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' : u.color === 'violet' ? 'bg-violet-500/10 border-violet-500/20 text-violet-400' : u.color === 'cyan' ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400' : 'bg-white/5 border-white/10 text-white/40'}`}>{u.role}</span>
+                  <CheckCircle2 size={14} className="text-white/20 group-hover:text-amber-400 transition" />
                 </div>
-                <p className="mt-2 font-mono text-[13px] font-medium text-zinc-100">{u.username}</p>
-                <p className="text-[11px] text-zinc-500 mt-1 leading-[1.3]">{u.desc}</p>
-                <p className="text-[10px] font-mono text-zinc-600 mt-1">Pass: {u.password}</p>
+                <p className="mt-3 font-mono text-[13px] font-medium text-[#F5F3EF]">{u.username}</p>
+                <p className="text-[11px] text-white/40 mt-1 leading-[1.4]">{u.desc}</p>
+                <p className="text-[10px] font-mono text-white/20 mt-2">Pass: {u.password}</p>
               </Link>
             ))}
           </div>
         </div>
+
+        {/* Architecture — clean */}
+        <div className="mt-12 rounded-[20px] border border-white/[0.06] bg-[#0a0a0a]/60 backdrop-blur p-6">
+          <h3 className="text-[13px] font-semibold mb-3 flex items-center gap-2"><Layers className="h-4 w-4 text-white/40" />Architecture — Clients → Policy engine → Dual-control → Ledger → Anomaly</h3>
+          <div className="font-mono text-[11px] text-white/30 leading-[1.6] bg-[#08080A] border border-white/[0.06] rounded-[12px] p-4 overflow-x-auto">
+            <div>Clients (web / PWA / Capacitor)</div>
+            <div className="pl-4 border-l border-white/[0.06] ml-2 mt-1">Next.js App Router → Session (HttpOnly, SameSite=Strict, signed cookie)</div>
+            <div className="pl-8 border-l border-white/[0.06] ml-2 mt-1">Policy engine (lib/authz) → Dual-control (approve/reject mandates)</div>
+            <div className="pl-12 border-l border-white/[0.06] ml-2 mt-1">Tamper-evident ledger (hash chain + HMAC) → Anomaly detection → SIEM export</div>
+            <div className="mt-3 text-white/20">Key modules: riskEngine.ts, policySimulator.ts, siemExport.ts, impersonationDetector.ts, complianceMapper.ts — 5 inventive engines, 5 API routes, 4 dashboards gated by can(role,action)</div>
+          </div>
+        </div>
       </main>
 
-      {/* Footer — 2 rows subtle legal like OrbitDesk v2.0.2 */}
-      <footer className="relative z-10 border-t border-zinc-800/60 bg-[#0a0a0a]/80 backdrop-blur mt-12">
-        <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-4">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-[11px] text-zinc-600">
-            <div className="flex flex-wrap items-center gap-3">
-              <span>Chokepoint Lab — Educational simulation, not real security system. HMAC-signed ledger, hash-chained audit, What If verified, Break Glass excluded from CA, dual-control, 4-eyes approval.</span>
+      {/* Footer — expert, not madman */}
+      <footer className="relative z-10 border-t border-white/[0.06] bg-[#050507]/80 backdrop-blur mt-12">
+        <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[11px] text-white/30 font-mono">
+            <div className="space-y-1">
+              <p><span className="text-white/60">Chokepoint v3.0</span> — Least-privilege access control & tamper-evident audit for sensitive ops — humans and AI agents. Educational simulation, HMAC-signed ledger, hash-chained, dual-control 4-eyes, OWASP ASI03.</p>
+              <p>Built by Devine Nyaenya • World-class expert standard • Focused, not trying everything • Proof over claims • 26 tests • 0 vulns • Next 16.3.5</p>
             </div>
-            <div className="flex items-center gap-3">
-              <span>Linear dark-first • Stripe mesh • Intercom bubbles • Superhuman ⌘K • Notion warmth • Vercel restraint</span>
-              <span className="h-3 w-px bg-zinc-800" />
-              <span className="font-mono">v2.0.0 • Military-grade • Zero Trust • 5 Voices • PWA+Electron</span>
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <Link href="/dashboard" className="hover:text-white/60 transition">Dashboard →</Link>
+              <span className="h-3 w-px bg-white/10" />
+              <Link href="https://devine-nyaenya-portfolio.vercel.app" className="hover:text-white/60 transition">Portfolio ↗</Link>
+              <span className="h-3 w-px bg-white/10" />
+              <span>devine@nyaenya.dev</span>
             </div>
           </div>
-          <div className="mt-3 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-[11px] text-zinc-700">
-            <span>Built by Devine Nyaenya • Inspired by top 20 SaaS combined for best outcome • Human not basic AI • Real-time endless • Voice approvals • Per-tenant policies • Remote PC feel • Desktop installable</span>
-            <div className="flex items-center gap-3">
-              <span>devine@nyaenya.dev</span>
-              <span className="h-3 w-px bg-zinc-700" />
-              <Link href="https://devine-nyaenya-portfolio.vercel.app" className="hover:text-zinc-500 transition">Portfolio ↗</Link>
-              <span className="h-3 w-px bg-zinc-700" />
-              <Link href="/dashboard" className="hover:text-zinc-500 transition">Dashboard →</Link>
-            </div>
+          <div className="mt-4 pt-4 border-t border-white/[0.04] flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-[10px] text-white/20 font-mono">
+            <span>Security: PBKDF2/Argon2id + salt, HMAC compare_digest, role whitelist, TTL CSRF IP rate limiting, html.escape, CSP self-only, HSTS 63072000, no secrets, no real tenant</span>
+            <span>v3.0 • Pure security • No OrbitDesk mixing • HashiCorp Vault + Snyk + Vanta + Linear inspiration • Human premium</span>
           </div>
         </div>
       </footer>

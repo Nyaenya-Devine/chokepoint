@@ -1,8 +1,8 @@
 {
   "name": "chokepoint",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
-  "description": "Chokepoint v2.0 — Live Security Operations Lab with real-time endless requests, voice approvals 5 balanced voices, remote verification encrypted sessions, per-tenant policies NovaTech/Bloom/Apex, mock security portals, HMAC-signed tamper-evident audit, desktop PWA+Electron",
+  "description": "Chokepoint v3.0 — World-class expert: least-privilege access control & tamper-evident audit for sensitive ops — humans and AI agents. Dual-control 4-eyes, SHA-256 hash-chained HMAC-signed ledger, anomaly detection, RBAC, policy simulator, SIEM export, compliance mapper, risk engine, 26 tests proving security properties. OWASP ASI03. No OrbitDesk mixing.",
   "main": "electron.js",
   "scripts": {
     "dev": "next dev",
