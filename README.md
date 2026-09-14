@@ -1,4 +1,4 @@
-# Chokepoint 🔐
+# Chokepoint 🔐 v3.0 — World-Class Expert
 
 **Least-privilege access control & tamper-evident audit for sensitive operations — humans and AI agents.**
 
@@ -11,9 +11,11 @@ two-person (dual-control) approval workflow, a hash-chained tamper-evident audit
 and explainable anomaly detection. It is built on the **2026 OWASP Agentic AI Top 10**
 failure **ASI03 — Identity & Privilege Abuse**.
 
-> **Try it:** sign in with a one-click demo account on the [live site](https://nyaenya-devine-chokepoint.vercel.app) — no signup. A recruiter can be inside the console in 30 seconds.
+> **Try it:** sign in with a one-click demo account on the [live site](https://chokepoint-demo.vercel.app) — no signup. A recruiter can be inside the console in 30 seconds.
 
 > ▶️ **Demo video:** watch the [28-second product demo](docs/demo/chokepoint-demo.mp4) (YouTube/LinkedIn-ready, original music — safe to post).
+
+> **Merged:** Android Reset Lab (Python simulation proving 6/6 attacks detected, 68 tests, P4 Cerberus God Mode — Argon2id, HMAC-signed logs, TOTP MFA, Merkle, Cedar ABAC, WebAuthn, Play Integrity, DPoP) is now the **simulation engine** for Chokepoint. Same core: dual-control + tamper-evident audit. Chokepoint is the live web product (Next.js, 26 routes, PWA), Reset Lab is the Python proof. Vercel cleaned from 7 → 5 projects, duplicate chokepoint (tau) and android-reset-lab Vercel deleted — single source of truth: chokepoint-demo.vercel.app. GitHub: github.com/Nyaenya-Devine/chokepoint (main) + android-reset-lab (simulation layer, archived reference).
 
 ---
 
