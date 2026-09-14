@@ -3,10 +3,10 @@ import "./globals.css";
 import PWARegister from "@/components/PWARegister";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nyaenya-devine-chokepoint.vercel.app"),
-  title: "Chokepoint v2.0 — Live Security Operations with Voice Approvals",
+  metadataBase: new URL("https://chokepoint-demo.vercel.app"),
+  title: "Chokepoint v3.0 — Least-privilege & Tamper-evident Audit for Sensitive Ops — Humans and AI Agents",
   description:
-    "Real-time endless high-impact requests that need 4-eyes approval, voice calls with 5 balanced voices men/women flowing conversation client does actions, remote verification encrypted session ID recording audit, per-tenant policies NovaTech/Bloom/Apex, mock security portals, HMAC-signed hash-chained tamper-evident audit, desktop PWA+Electron",
+    "World-class expert: dual-control 4-eyes distinct approver, SHA-256 hash-chained HMAC-SHA256 + Merkle ledger, anomaly detection explainable, RBAC least privilege, policy simulator dry-run, SIEM JSON/CEF/OCSF/LEEF, compliance NIST/OWASP ASI03/SOC2/MITRE/ISO27001, risk engine 0-100, 26 tests proving security properties. OWASP Agentic AI ASI03. Pure security, no OrbitDesk mixing.",
   applicationName: "Chokepoint",
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
@@ -16,9 +16,9 @@ export const metadata: Metadata = {
     apple: "/icon.svg",
   },
   openGraph: {
-    title: "Chokepoint v2.0 — Live Security Operations with Voice Approvals",
+    title: "Chokepoint v3.0 — Pure Security Expert — Dual-control, Hash-chained, HMAC-signed",
     description:
-      "Real-time endless requests, voice approvals 5 balanced voices, remote verification 100% real PC feel, per-tenant policies, mock portals, HMAC-signed tamper-evident, desktop PWA+Electron",
+      "Least-privilege access control & tamper-evident audit for sensitive ops — humans and AI agents. Dual-control 4-eyes, hash-chained HMAC-signed ledger, anomaly detection, RBAC, 26 tests proving properties. OWASP ASI03.",
     type: "website",
   },
 };
