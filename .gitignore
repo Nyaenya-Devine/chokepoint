@@ -1,17 +1,17 @@
-node_modules
-.next
-out
+!data/.gitkeep
+# demo large binaries moved to GitHub Release asset to keep repo lean
 *.log
 .DS_Store
 .env
 .env.local
-data/*.json
-!data/.gitkeep
-coverage
-tsconfig.tsbuildinfo
+.next
 .vercel
-# demo large binaries moved to GitHub Release asset to keep repo lean
-docs/demo/*.mp4
+coverage
+data/*.json
 docs/demo/*.mp3
-docs/demo/*.wav
+docs/demo/*.mp4
 docs/demo/*.png
+docs/demo/*.wav
+node_modules
+out
+tsconfig.tsbuildinfo

@@ -1,42 +1,32 @@
-/**
- * chokepoint — session handling.
- *
- * Sessions are carried in an **HttpOnly, SameSite=Strict** cookie so the token
- * is never readable from JavaScript (mitigates XSS token theft). The token is
- * a signed payload (uid|expiry) with an HMAC, so it cannot be forged or edited
- * without the server secret. Expiry is checked on every request.
- *
- * Note: In this Next.js version `cookies()` from next/headers is async.
- *
- * Cookie flags:
- *  - HttpOnly  : JS cannot read it → not exposed to XSS.
- *  - SameSite=Strict : not sent cross-site → CSRF resistance.
- *  - Secure    : only over HTTPS (added in production; Vercel is HTTPS).
- *  - Path=/    : sent to all routes.
- */
+/** Secure signed session-cookie handling for chokepoint. */
 
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { b64urlDecode, b64url, hmacSign, safeEqual } from "./crypto";
 
 const SESSION_COOKIE = "chokepoint_session";
-const SESSION_MAX_AGE = 60 * 60; // 1 hour
-const SESSION_SECRET =
-  process.env.CHOKEPOINT_SESSION_SECRET ??
-  "chokepoint-session-dev-secret-rotate-me";
+const SESSION_MAX_AGE = 60 * 60;
+
+function requiredSecret(): string {
+  const secret = process.env.CHOKEPOINT_SESSION_SECRET;
+  if (secret && secret.length >= 32) return secret;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("CHOKEPOINT_SESSION_SECRET must be set to a random value of at least 32 characters in production");
+  }
+  return "local-development-only-session-secret-change-me";
+}
 
 export interface SessionPayload {
   uid: string;
-  exp: number; // epoch ms
+  exp: number;
 }
 
 function sign(uid: string, exp: number): string {
-  return hmacSign(SESSION_SECRET, `${uid}.${exp}`);
+  return hmacSign(requiredSecret(), `${uid}.${exp}`);
 }
 
 function makeToken(payload: SessionPayload): string {
   const body = b64url(Buffer.from(JSON.stringify(payload), "utf8"));
-  const sig = sign(payload.uid, payload.exp);
-  return `${body}.${sig}`;
+  return `${body}.${sign(payload.uid, payload.exp)}`;
 }
 
 function parseToken(token: string): SessionPayload | null {
@@ -50,35 +40,19 @@ function parseToken(token: string): SessionPayload | null {
   } catch {
     return null;
   }
+  if (!payload || typeof payload.uid !== "string" || !payload.uid || !Number.isSafeInteger(payload.exp)) return null;
   const expected = sign(payload.uid, payload.exp);
-  if (!safeEqual(sig, expected)) return null;
-  if (Date.now() > payload.exp) return null;
+  if (!safeEqual(sig, expected) || Date.now() > payload.exp) return null;
   return payload;
 }
 
-/**
- * Secure only when the connection is actually HTTPS. In production behind a TLS
- * terminator (Vercel) the request carries `x-forwarded-proto: https`, so we set
- * Secure. Over a plain-HTTP preview the browser would otherwise *drop* a Secure
- * cookie entirely — which breaks the demo. Reflecting the real scheme keeps the
- * cookie correct and working everywhere.
- */
-async function isHttps(): Promise<boolean> {
-  const h = await headers();
-  // Vercel/proxies stamp x-forwarded-proto with the real scheme. Absent or
-  // "http" → not secure, so the cookie is accepted in the local preview too.
-  return (h.get("x-forwarded-proto") ?? "").toLowerCase() === "https";
-}
-
-/** Set the session cookie (HttpOnly, SameSite=Strict). */
 export async function setSessionCookie(uid: string): Promise<void> {
   const payload: SessionPayload = { uid, exp: Date.now() + SESSION_MAX_AGE * 1000 };
-  const value = makeToken(payload);
   const store = await cookies();
-  store.set(SESSION_COOKIE, value, {
+  store.set(SESSION_COOKIE, makeToken(payload), {
     httpOnly: true,
     sameSite: "strict",
-    secure: await isHttps(),
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: SESSION_MAX_AGE,
   });
@@ -89,17 +63,19 @@ export async function clearSessionCookie(): Promise<void> {
   store.set(SESSION_COOKIE, "", {
     httpOnly: true,
     sameSite: "strict",
-    secure: await isHttps(),
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 0,
   });
 }
 
-/** Read and verify the current session; returns uid or null. */
 export async function getSessionUid(): Promise<string | null> {
   const store = await cookies();
   const token = store.get(SESSION_COOKIE)?.value;
   if (!token) return null;
-  const payload = parseToken(token);
-  return payload ? payload.uid : null;
+  try {
+    return parseToken(token)?.uid ?? null;
+  } catch {
+    return null;
+  }
 }
