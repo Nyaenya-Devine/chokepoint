@@ -1,0 +1,76 @@
+name: Bug Report — Chokepoint Lab
+description: Report a bug in ticket queue, portals, voice calls, LinkedIn chat, orbit animation, or Electron auto-update
+title: "[Bug] "
+labels: ["bug", "triage"]
+assignees: ["Nyaenya-Devine"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! Chokepoint is a Modern Workplace Operations Lab — include steps, expected vs actual, and security impact if any.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Queue / Tickets
+        - Portals (Entra, Intune, Exchange)
+        - Voice Calls / TTS/STT
+        - LinkedIn Chat Dock
+        - Toast / Notifications
+        - Logo / Orbit Animation
+        - Layout / Footer Overlap
+        - Pause / Shift Status
+        - Electron Desktop / Auto-Update
+        - PWA / Install
+        - Security / CSP / Permissions
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: "1. Go to Queue tab, 2. Select P1 ticket, 3. ... — include browser/Electron version"
+      placeholder: "Steps..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs Actual
+      placeholder: "Expected: LinkedIn dock shows 320px white rounded-t-xl... Actual: overlapping..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - P1 — Blocker (P1 payroll, security, build fails)
+        - P2 — High (major UX break, orbit missing, chat not opening)
+        - P3 — Medium (toast covering guide, minor overlap)
+        - P4 — Low (cosmetic, copy)
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Screenshots
+      description: "Paste console logs, add screenshot — mask any real tenant data"
+      render: shell
+
+  - type: checkboxes
+    id: security
+    attributes:
+      label: Security Checklist
+      options:
+        - label: "No real credentials, tenant IDs, or secrets in this report"
+          required: true
+        - label: "Checked `grep -r ghp_` clean — no PAT leaked"
+          required: true

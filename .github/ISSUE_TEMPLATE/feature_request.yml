@@ -1,0 +1,61 @@
+name: Feature Request — Chokepoint
+description: Request new lab capability — must be human, not AI-basic, inspired by top 20 sites
+title: "[Feature] "
+labels: ["enhancement", "triage"]
+assignees: ["Nyaenya-Devine"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Chokepoint aims for 100% real feel — not basic AI. Propose features that teach beginner MSP workflow like real helpdesk, with modern appearance.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem — What beginner struggle does this solve?
+      placeholder: "As a beginner never worked in IT support, I need to feel reality when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solution — How should it work? (Include LinkedIn-style UX if chat, orbit animation if logo, modern blur if toast)
+      placeholder: "Like LinkedIn messaging dock bottom-right 320px white rounded-t-xl..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: inspiration
+    attributes:
+      label: Inspiration — Top 20 sites combined
+      options:
+        - LinkedIn (messaging dock)
+        - Linear (clean, modern)
+        - Vercel (dashboard)
+        - Stripe (docs, polish)
+        - Figma (collaboration)
+        - Slack (presence, typing)
+        - Microsoft Intune (real portal)
+        - Entra ID (real logs)
+        - ServiceDesk Simulator (real tickets)
+        - SysDesks (terminal, server room)
+        - Other — specify in solution
+
+  - type: textarea
+    id: security
+    attributes:
+      label: Security & Titles — How does this showcase cybersecurity expertise?
+      placeholder: "Zero-trust, audit logs, break glass, SBOM, auto-update signed..."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: "This is not mixing Chokepoint (least-privilege dual-control) with Chokepoint — separate products"
+          required: true
+        - label: "Feature keeps project 100% polished and testable, not amateurish dev info in UI"
+          required: true

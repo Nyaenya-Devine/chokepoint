@@ -1,4 +1,14 @@
-# Chokepoint 🔐 v3.0 — World-Class Expert
+# Chokepoint 🔐 v3.1 — World-Class Expert
+
+![CI](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/ci.yml/badge.svg)
+![Security](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/security.yml/badge.svg)
+![CodeQL](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/security.yml/badge.svg)
+![Electron Release](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/electron-release.yml/badge.svg)
+![SBOM](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/sbom.yml/badge.svg)
+![SLSA](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/slsa.yml/badge.svg)
+![Signed Commits](https://img.shields.io/badge/Commits-Signed%20Verified-brightgreen?logo=git)
+![Electron](https://img.shields.io/badge/Electron-32.3.3-47848F?logo=electron)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 **Least-privilege access control & tamper-evident audit for sensitive operations — humans and AI agents.**
 

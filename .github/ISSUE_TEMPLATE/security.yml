@@ -1,0 +1,40 @@
+name: Security Report — Private
+description: Report security vulnerability — DO NOT include real secrets, use GitHub Security Advisories for private disclosure
+title: "[Security] "
+labels: ["security", "triage", "confidential"]
+assignees: ["Nyaenya-Devine"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **DO NOT report secrets here.** For private disclosure, use **Security Advisories**: https://github.com/Nyaenya-Devine/chokepoint/security/advisories/new
+        Chokepoint implements zero-trust: CSP, sandbox, contextIsolation, permissions hardening, audit logs.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Vulnerability Type
+      options:
+        - XSS in chat / portals
+        - Electron IPC / preload bypass
+        - CSP bypass
+        - Secret leak (PAT, token)
+        - Dependency CVE
+        - Insecure auto-update
+        - Other — describe
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details — Repro steps, impact, CVSS if known
+      placeholder: "No real credentials..."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: private
+    attributes:
+      label: Disclosure
+      options:
+        - label: "I have NOT included real credentials, PATs, or tenant data — used Security Advisory for private details"
+          required: true
