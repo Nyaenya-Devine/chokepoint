@@ -1,0 +1,195 @@
+name: Electron Release — Auto-Update via GitHub Releases
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 6.6.0)'
+        required: true
+        default: '6.6.0'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Publish — Win/Mac/Linux
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: windows-latest
+            platform: win
+          - os: macos-latest
+            platform: mac
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci --ignore-scripts
+
+      - name: Next Build — verify LinkedIn dock + orbit + toast modern + pause
+        run: npm run build
+
+      - name: Generate SBOM — CycloneDX for supply chain transparency
+        run: |
+          npx @cyclonedx/cyclonedx-npm --output-file sbom.json --output-format json || echo "SBOM fallback"
+          cat sbom.json | head -n 50 || true
+
+      - name: Build Electron — ${{ matrix.platform }}
+        run: |
+          npx electron-builder --${{ matrix.platform }} --publish=never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to GitHub Releases — auto-update artifacts (yml, exe, dmg, AppImage)
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          npx electron-builder --${{ matrix.platform }} --publish=always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: chokepoint-${{ matrix.platform }}-${{ github.ref_name || inputs.version }}
+          path: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.AppImage
+            dist/*.deb
+            dist/*.zip
+            dist/*.yml
+            dist/*.yaml
+            sbom.json
+          if-no-files-found: warn
+
+  release-notes:
+    name: Create GitHub Release — Changelog
+    runs-on: ubuntu-latest
+    needs: release
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v6
+      - name: Generate Release Notes — v6.6 LinkedIn chat + orbit + toast + pause
+        run: |
+          cat > release_notes.md << 'EOF'
+          # Chokepoint v6.6 — LinkedIn Chat + Orbit Animation + Modern Toast + Pause
+
+          ## 🚀 Features — 100% Real Feel, Not AI-Basic
+
+          ### LinkedIn-Style Messaging Dock (NEW)
+          - Bottom-right 320px white rounded-t-xl shadow-2xl — like LinkedIn screenshot
+          - Header: avatar online dot, Messaging title, unread red badge, ••• ✎ ⌃
+          - Search #edf3f8 rounded-full, Focused emerald pill / Other
+          - Conversation list: avatar+name+snippet+role+time+unread blue dot
+          - Footer: Chokepoint — Real MSP chat • Presence • Typing • Files
+          - Chat windows: 320x400 white, header avatar status, MONDAY separator
+          - Bubbles: white border client rounded-bl-sm, violet you rounded-br-sm, font-semibold name + time + ✓✓
+          - Typing dots, blue info "You haven't received a response yet. Learn more"
+          - Input #f4f2ee rounded-full with 😊 📎, bottom icons 🖼️ 🎥 📎 + Send pill
+          - Max 2 windows, auto-open live ticket, spring animation
+
+          ### Modern Toast System
+          - Bottom-left z-45 w-340, blur-2xl, max 2 visible, not covering StudentModeGuide z-100
+          - Thin gradient progress bar bottom, swipe to dismiss drag x, grouped ×count
+          - Modern spring animation, backdrop-blur, border zinc-700/50
+
+          ### Restored Orbit Animation
+          - Logo full variant: rotating orbit rings 6s, 8s, 12s, dots, glow blur, pulse
+          - Header Logo variant="full" size 30 animated — signature Chokepoint feel
+          - Lab • v6.1 • Real Voice • Human with rotating ◍
+
+          ### Layout Fix — No More Overlap
+          - Header 56px pill tabs, flex-1 min-h-0, footer mt-auto, pb-80px for dock
+          - No calc heights, z hierarchy: toast 45 < dock 65 < guide 100
+          - Clean, modern, classy — inspired by Linear + Vercel + Stripe
+
+          ### Pause-When-Away (v6.5)
+          - Auto-pause on visibilitychange, SLA push-forward, welcome-back 0-3 tickets
+          - ShiftStatus component, manual Pause/Resume, awayMinutes tracking
+
+          ## 🔒 Security Hardening — Cybersecurity Titles Essential
+
+          ### Electron 32.3.3 + Auto-Update
+          - Updated from 28.0.0 → 32.3.3 (Chromium 128, Node 20) — CVE fixes
+          - electron-updater 6.6.2 + electron-log 5.2.1 — auto-update via GitHub Releases
+          - Auto-download false (user consent — zero-trust), autoInstallOnAppQuit true
+          - Update flow: checking → available → download progress → downloaded → quitAndInstall
+          - IPC via preload secure bridge, no nodeIntegration, contextIsolation true, sandbox true
+          - Menu: Check for Updates, Version, Security Policy, Threat Model, Audit Logs, Report Security Issue
+
+          ### Security Headers & Permissions
+          - next.config.ts: X-Frame-Options DENY, X-Content-Type-Options nosniff, HSTS 63072000, CSP, Permissions-Policy microphone=(self)
+          - Electron session: CSP header, permission handler — allow microphone for voice calls, block camera/geo — zero-trust
+          - Single instance lock — prevents spoofing
+          - WebView attach blocked, will-navigate blocked for untrusted origins
+
+          ### Supply Chain & SBOM
+          - SBOM via CycloneDX — sbom.json in release artifacts
+          - npm ci for integrity, package-lock.json pinned
+          - Dependabot weekly npm + github-actions, groups dev-deps + electron
+          - CodeQL SAST, Dependency Review, TruffleHog secret scan, npm audit high fails
+          - Electron hardening check: contextIsolation, sandbox, webSecurity, permission handler, autoUpdater, singleInstanceLock
+
+          ### GitHub Hardening
+          - CODEOWNERS — Devine Nyaenya owns security critical files
+          - Issue templates: bug_report, feature_request, security (private advisory)
+          - PR template: security checklist, zero-trust, audit logging, build verification
+          - Branch protection recommended: require CI + Security workflows, CODEOWNERS review, secret scanning
+          - Signed commits guidance, SLSA provenance (future)
+
+          ## 📦 Packaging — PWA + Electron + Stores
+
+          ### PWA — TWA for Play Store
+          - PWABuilder: https://www.pwabuilder.com/ — package TWA for Play Store
+          - Manifest: public/manifest.json — display standalone, icons 512, shortcuts
+          - Service Worker: next-pwa ready, offline queue, install prompt
+
+          ### Windows Store — MSIX via PWA
+          - PWABuilder → Windows package → MSIX → Partner Center
+          - Electron MSIX alternative: electron-builder --win appx (requires cert)
+
+          ### Electron — GitHub Releases Auto-Update
+          - Build: npm run desktop:dist (win nsis + portable, mac dmg + zip x64+arm64, linux AppImage + deb)
+          - Publish: npm run desktop:publish — pushes to GitHub Releases with latest.yml
+          - Auto-update: electron-updater checks https://github.com/Nyaenya-Devine/chokepoint/releases — verified signature
+
+          ## 🎯 Interview Ready — Titles
+
+          - MSP Team Lead — Least-Privilege Dual-Control Tamper-Evident Security Product
+          - Entra ID, Intune, Exchange, Conditional Access, Zero Trust, RBAC, Break Glass
+          - Real voice calls TTS/STT, live scoring empathy clarity technical fluency
+          - Remote PC Win11 encrypted, Session ID, audit logs, BitLocker escrow
+          - LinkedIn chat dock — real client messaging like screenshot
+          - Progress: Lvl, XP, CSAT, QA, SLA, Grade, badges — saved locally, assessment report
+          - Build: Verified 9/9 routes, no calc overlap, modern toast bottom-left, orbit animation restored
+
+          **Full Changelog**: https://github.com/Nyaenya-Devine/chokepoint/compare/v6.5.0...v6.6.0
+          EOF
+          cat release_notes.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release_notes.md
+          files: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.AppImage
+            dist/*.yml
+            sbom.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

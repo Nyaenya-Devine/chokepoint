@@ -1,0 +1,12 @@
+# Chokepoint — Code Owners — Least-Privilege Dual-Control Tamper-Evident Security Product
+# Devine Nyaenya — OWASP ASI03 — No OrbitDesk mixing
+* @Nyaenya-Devine
+
+/SECURITY.md @Nyaenya-Devine
+/THREAT_MODEL.md @Nyaenya-Devine
+/electron.js @Nyaenya-Devine
+/preload.js @Nyaenya-Devine
+/next.config.mjs @Nyaenya-Devine
+/.github/workflows/security.yml @Nyaenya-Devine
+/lib/ledger.ts @Nyaenya-Devine
+/lib/dualControl.ts @Nyaenya-Devine

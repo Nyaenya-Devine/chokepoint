@@ -1,6 +1,14 @@
-const { app, BrowserWindow, Menu, shell, dialog, ipcMain, Notification } = require('electron');
+const { app, BrowserWindow, Menu, shell, dialog, ipcMain, Notification, session } = require('electron');
 const path = require('path');
+const log = require('electron-log');
+const { autoUpdater } = require('electron-updater');
+
 const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
+
+log.transports.file.level = 'info';
+autoUpdater.logger = log;
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
 
 let mainWindow;
 
@@ -18,6 +26,7 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
+      sandbox: true,
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: true,
       allowRunningInsecureContent: false,
@@ -27,26 +36,52 @@ function createWindow() {
     visualEffectState: 'active',
   });
 
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [
+          "default-src 'self' https://chokepoint-demo.vercel.app; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://chokepoint-demo.vercel.app; frame-ancestors 'none';"
+        ],
+      }
+    });
+  });
+
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+    if (permission === 'notifications') callback(true);
+    else {
+      log.warn(`Permission denied: ${permission} — zero-trust block`);
+      callback(false);
+    }
+  });
+
   if (isDev) {
     mainWindow.loadURL('http://localhost:3000');
     mainWindow.webContents.openDevTools({ mode: 'detach' });
   } else {
-    mainWindow.loadURL('https://nyaenya-devine-chokepoint.vercel.app').catch(() => {
-      mainWindow.loadFile(path.join(__dirname, 'out/index.html'));
+    mainWindow.loadURL('https://chokepoint-demo.vercel.app').catch(() => {
+      mainWindow.loadFile(path.join(__dirname, 'out/index.html')).catch(() => {
+        mainWindow.loadURL('https://chokepoint-demo.vercel.app');
+      });
     });
   }
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
     mainWindow.focus();
-    
     if (Notification.isSupported()) {
       new Notification({
-        title: 'Chokepoint — Live Security Operations Lab',
-        body: 'Desktop app ready — Real-time requests, voice approvals, remote verification, per-tenant policies',
+        title: 'Chokepoint — Least-Privilege Dual-Control v3.1',
+        body: 'Desktop ready — Auto-update enabled • Tamper-evident ledger • Dual-control',
         icon: path.join(__dirname, 'public/icon-512.png'),
         silent: false,
       }).show();
+    }
+    if (!isDev) {
+      setTimeout(() => {
+        log.info('Checking for updates...');
+        autoUpdater.checkForUpdates().catch(err => log.error('Update check failed', err));
+      }, 3000);
     }
   });
 
@@ -65,27 +100,69 @@ function createWindow() {
         actions: [{ type: 'button', text: 'Approve — Voice Call' }],
         closeButtonText: 'Review Later',
       });
-      
       notification.on('action', () => {
         mainWindow.webContents.send('accept-request', request);
         mainWindow.show();
         mainWindow.focus();
       });
-      
       notification.show();
     }
   });
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+  mainWindow.on('closed', () => { mainWindow = null; });
 }
+
+autoUpdater.on('checking-for-update', () => { log.info('Checking for update...'); if (mainWindow) mainWindow.webContents.send('update-checking'); });
+autoUpdater.on('update-available', (info) => {
+  log.info(`Update available: ${info.version}`);
+  if (mainWindow) {
+    mainWindow.webContents.send('update-available', info);
+    dialog.showMessageBox(mainWindow, {
+      type: 'info',
+      title: 'Update Available — Chokepoint v' + info.version,
+      message: `Chokepoint ${info.version} available. Current: ${app.getVersion()}. Download now?`,
+      detail: `Release notes: ${info.releaseNotes || 'Security hardening, dual-control improvements, tamper-evident ledger'}\n\nZero-trust: Verified via GitHub Releases signature.`,
+      buttons: ['Download Now', 'Later'],
+      defaultId: 0,
+    }).then(result => { if (result.response === 0) { autoUpdater.downloadUpdate(); mainWindow.webContents.send('update-downloading'); } });
+  }
+});
+autoUpdater.on('update-not-available', () => { log.info('Update not available'); if (mainWindow) mainWindow.webContents.send('update-not-available'); });
+autoUpdater.on('download-progress', (progress) => { log.info(`Download ${progress.percent.toFixed(1)}%`); if (mainWindow) mainWindow.webContents.send('update-progress', progress); });
+autoUpdater.on('update-downloaded', (info) => {
+  log.info(`Update downloaded: ${info.version}`);
+  if (mainWindow) {
+    mainWindow.webContents.send('update-downloaded', info);
+    dialog.showMessageBox(mainWindow, {
+      type: 'info',
+      title: 'Update Ready — Restart to Install',
+      message: `Chokepoint ${info.version} downloaded — restart?`,
+      detail: 'Verified signature, will install on quit. Audit ledger preserved — tamper-evident.',
+      buttons: ['Restart Now', 'On Next Launch'],
+      defaultId: 0,
+    }).then(result => { if (result.response === 0) autoUpdater.quitAndInstall(); });
+  }
+});
+autoUpdater.on('error', (err) => { log.error('Auto-updater error', err); if (mainWindow) mainWindow.webContents.send('update-error', err.message); });
+
+ipcMain.handle('check-for-updates', async () => {
+  if (isDev) return { status: 'dev-mode' };
+  try { const result = await autoUpdater.checkForUpdates(); return { status: 'checked', info: result?.updateInfo }; }
+  catch (e) { log.error('Update check failed', e); return { status: 'error', message: e.message }; }
+});
+ipcMain.handle('download-update', async () => { try { await autoUpdater.downloadUpdate(); return { status: 'downloading' }; } catch (e) { return { status: 'error', message: e.message }; } });
+ipcMain.handle('install-update', () => autoUpdater.quitAndInstall());
+ipcMain.handle('get-app-version', () => app.getVersion());
+ipcMain.handle('get-app-info', () => ({ version: app.getVersion(), electron: process.versions.electron, platform: process.platform, isPackaged: app.isPackaged }));
 
 const template = [
   {
     label: 'Chokepoint',
     submenu: [
       { role: 'about', label: 'About Chokepoint' },
+      { type: 'separator' },
+      { label: 'Check for Updates...', click: () => { if (!isDev) autoUpdater.checkForUpdates(); else dialog.showMessageBox({ message: 'Updates disabled in dev', type: 'info' }); } },
+      { label: `Version ${app.getVersion()}`, enabled: false },
       { type: 'separator' },
       { label: 'Preferences', accelerator: 'CmdOrCtrl+,', click: () => mainWindow.webContents.send('open-settings') },
       { type: 'separator' },
@@ -103,21 +180,14 @@ const template = [
     submenu: [
       { label: 'New Approval Request', accelerator: 'CmdOrCtrl+N', click: () => mainWindow.webContents.send('new-request') },
       { label: 'Export Audit Log', accelerator: 'CmdOrCtrl+E', click: () => mainWindow.webContents.send('export-audit') },
+      { label: 'Export SBOM', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/blob/main/sbom.json') },
       { type: 'separator' },
       { role: 'close' },
     ],
   },
   {
     label: 'Edit',
-    submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
-      { type: 'separator' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { role: 'paste' },
-      { role: 'selectAll' },
-    ],
+    submenu: [{ role: 'undo' }, { role: 'redo' }, { type: 'separator' }, { role: 'cut' }, { role: 'copy' }, { role: 'paste' }, { role: 'selectAll' }],
   },
   {
     label: 'Approvals',
@@ -133,27 +203,26 @@ const template = [
   {
     label: 'View',
     submenu: [
-      { role: 'reload' },
-      { role: 'forceReload' },
-      { role: 'toggleDevTools' },
-      { type: 'separator' },
-      { role: 'resetZoom' },
-      { role: 'zoomIn' },
-      { role: 'zoomOut' },
-      { type: 'separator' },
-      { role: 'togglefullscreen' },
-      { type: 'separator' },
+      { role: 'reload' }, { role: 'forceReload' }, { role: 'toggleDevTools' }, { type: 'separator' },
+      { role: 'resetZoom' }, { role: 'zoomIn' }, { role: 'zoomOut' }, { type: 'separator' },
+      { role: 'togglefullscreen' }, { type: 'separator' },
       { label: 'Command Palette', accelerator: 'CmdOrCtrl+K', click: () => mainWindow.webContents.send('open-command-palette') },
     ],
   },
   {
-    label: 'Window',
+    label: 'Security',
     submenu: [
-      { role: 'minimize' },
-      { role: 'zoom' },
+      { label: 'Security Policy', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/blob/main/SECURITY.md') },
+      { label: 'Threat Model', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/blob/main/THREAT_MODEL.md') },
+      { label: 'Audit Ledger (HMAC)', click: () => mainWindow.webContents.send('open-ledger') },
+      { label: 'Check for Updates — Secure', click: () => { if (!isDev) autoUpdater.checkForUpdates(); } },
       { type: 'separator' },
-      { role: 'front' },
+      { label: 'Report Security Issue', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/security/advisories/new') },
     ],
+  },
+  {
+    label: 'Window',
+    submenu: [{ role: 'minimize' }, { role: 'zoom' }, { type: 'separator' }, { role: 'front' }],
   },
   {
     label: 'Help',
@@ -163,6 +232,7 @@ const template = [
       { type: 'separator' },
       { label: 'Chokepoint GitHub', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint') },
       { label: 'Report Issue', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/issues') },
+      { label: 'Release Notes', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/releases') },
     ],
   },
 ];
@@ -171,29 +241,20 @@ app.whenReady().then(() => {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
   createWindow();
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
+  app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 });
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
-});
+app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
 
 app.on('web-contents-created', (event, contents) => {
   contents.on('will-navigate', (event, navigationUrl) => {
-    const parsedUrl = new URL(navigationUrl);
-    if (parsedUrl.origin !== 'http://localhost:3000' && parsedUrl.origin !== 'https://nyaenya-devine-chokepoint.vercel.app' && !navigationUrl.startsWith('file://')) {
-      event.preventDefault();
-      shell.openExternal(navigationUrl);
-    }
+    const allowed = ['http://localhost:3000', 'https://chokepoint-demo.vercel.app'];
+    const isAllowed = allowed.some(o => navigationUrl.startsWith(o)) || navigationUrl.startsWith('file://');
+    if (!isAllowed) { event.preventDefault(); log.warn(`Blocked nav to ${navigationUrl}`); shell.openExternal(navigationUrl); }
   });
+  contents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: 'deny' }; });
 });
 
-app.on('web-contents-created', (event, contents) => {
-  contents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
-    return { action: 'deny' };
-  });
-});
+const gotLock = app.requestSingleInstanceLock();
+if (!gotLock) app.quit();
+else app.on('second-instance', () => { if (mainWindow) { if (mainWindow.isMinimized()) mainWindow.restore(); mainWindow.focus(); } });

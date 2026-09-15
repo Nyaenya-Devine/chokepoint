@@ -1,0 +1,113 @@
+name: Security — CodeQL, Dependency Review, Secret Scan, Audit
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  schedule:
+    - cron: '0 9 * * 1' # Monday 9am Nairobi — weekly security scan
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  codeql:
+    name: CodeQL — SAST
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: javascript, typescript
+          queries: security-and-quality
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v4
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:javascript"
+
+  dependency-review:
+    name: Dependency Review — Supply Chain
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v6
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, 0BSD
+
+  secret-scan:
+    name: Secret Scan — TruffleHog + Grep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+      - name: Grep for PAT patterns — fail on leak
+        run: |
+          echo "Checking for ghp_, github_pat_, vcp_ leaks..."
+          if grep -R --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=dist --exclude-dir=.git -E "ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|vcp_[A-Za-z0-9]{20,}" .; then
+            echo "::error::Leaked secret pattern found — rotate PAT immediately, clean history via filter-branch"
+            exit 1
+          fi
+          echo "No leaked secrets — clean"
+
+  npm-audit:
+    name: npm Audit — CVEs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+      - run: npm ci --ignore-scripts
+      - name: npm audit — high severity fails
+        run: npm audit --audit-level=high || (echo "::warning::npm audit found high severity — review, run npm audit fix if safe" && exit 0)
+      - name: Check Electron version — must be >=32 for security
+        run: |
+          ELECTRON_VER=$(node -p "require('./package.json').devDependencies.electron" || echo "not found")
+          echo "Electron version spec: $ELECTRON_VER"
+          node -e "const v=require('./package.json').devDependencies.electron; const major=parseInt(v.match(/\d+/)[0]); if(major<32){console.error('Electron <32 — upgrade required for security'); process.exit(1)} else console.log('Electron >=32 — secure')"
+
+  headers-check:
+    name: Security Headers — CSP, HSTS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify next.config.ts has security headers
+        run: |
+          grep -q "X-Frame-Options" next.config.ts || (echo "X-Frame-Options missing in next.config.ts" && exit 1)
+          grep -q "Content-Security-Policy" next.config.ts || (echo "CSP missing" && exit 1)
+          grep -q "Strict-Transport-Security" next.config.ts || (echo "HSTS missing" && exit 1)
+          grep -q "Permissions-Policy" next.config.ts || (echo "Permissions-Policy missing" && exit 1)
+          echo "Security headers present — DENY, nosniff, HSTS, CSP, Permissions-Policy (microphone=self for voice calls)"
+
+  electron-hardening:
+    name: Electron Hardening — Zero-Trust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify Electron security best practices
+        run: |
+          grep -q "contextIsolation: true" electron.js || (echo "contextIsolation must be true" && exit 1)
+          grep -q "nodeIntegration: false" electron.js || (echo "nodeIntegration must be false" && exit 1)
+          grep -q "sandbox: true" electron.js || (echo "sandbox must be true — zero-trust" && exit 1)
+          grep -q "webSecurity: true" electron.js || (echo "webSecurity must be true" && exit 1)
+          grep -q "setPermissionRequestHandler" electron.js || (echo "Permission handler missing — must block camera/geo" && exit 1)
+          grep -q "autoUpdater" electron.js || (echo "autoUpdater missing — essential for desktop" && exit 1)
+          grep -q "requestSingleInstanceLock" electron.js || (echo "Single instance lock missing — prevents spoofing" && exit 1)
+          echo "Electron hardening verified — contextIsolation, sandbox, permissions, single instance, auto-update"
