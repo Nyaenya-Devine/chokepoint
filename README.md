@@ -1,11 +1,16 @@
-# Chokepoint 🔐 v3.1 — Least-Privilege Security Control Plane
+# Chokepoint — Dual-Control Security Plane
 
 ![CI](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/ci.yml/badge.svg)
 ![Security](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/security.yml/badge.svg)
 ![Electron](https://img.shields.io/badge/Electron-44.3.0-47848F?logo=electron)
 ![License](https://img.shields.io/badge/License-MIT-green)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FNyaenya-Devine%2Fchokepoint)
 
-**Least-privilege access control & tamper-evident audit for sensitive operations — humans and AI agents.**
+**Live Demo:** https://chokepoint-demo.vercel.app · **Portfolio:** https://devine-nyaenya-portfolio.vercel.app · **Stars welcome ⭐**
+
+**Least-privilege dual-control access plane with HMAC-signed, hash-chained tamper-evident audit — for humans and AI agents.**
+
+> **For Security Engineers, AppSec, and Zero Trust teams** — demonstrates end-to-end security ownership: RBAC, 4-eyes approval, provable audit trail, anomaly detection, policy simulation, and hardened desktop packaging.
 
 Chokepoint is a full-stack security product with role-based authentication, two-person approval, a hash-chained tamper-evident audit log, explainable anomaly detection, policy simulation and SIEM export controls.
 
