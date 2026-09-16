@@ -365,7 +365,7 @@ export default function LandingV3() {
         </div>
       </main>
 
-      {/* Footer — expert, not madman */}
+      {/* Footer — professional */}
       <footer className="relative z-10 border-t border-white/[0.06] bg-[#050507]/80 backdrop-blur mt-12">
         <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-6">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[11px] text-white/30 font-mono">

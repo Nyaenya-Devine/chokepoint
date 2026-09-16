@@ -1,6 +1,6 @@
 {
   "name": "chokepoint",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "private": true,
   "description": "Chokepoint v3.1 — least-privilege access control and tamper-evident audit for sensitive operations.",
   "author": "Devine Nyaenya <devinenyaenya@gmail.com>",
