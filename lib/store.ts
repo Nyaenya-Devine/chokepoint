@@ -1,6 +1,6 @@
 /**
  * chokepoint — in-memory application store (server-only).
- * Production deployments must provide a strong, private CHOKEPOINT_SECRET.
+ * Production requires a strong ledger secret and explicit deployment credentials.
  */
 
 import "server-only";
@@ -13,22 +13,29 @@ import type { Role } from "./authz";
 function requiredLedgerSecret(): string {
   const secret = process.env.CHOKEPOINT_SECRET;
   if (secret && secret.length >= 32) return secret;
-  if (process.env.NODE_ENV === "production") {
-    throw new Error("CHOKEPOINT_SECRET must be set to a random value of at least 32 characters in production");
-  }
+  if (process.env.NODE_ENV === "production") throw new Error("CHOKEPOINT_SECRET must be set to a random value of at least 32 characters in production");
   return "local-development-only-ledger-secret-change-me";
 }
 
 const LEDGER_SECRET = requiredLedgerSecret();
 
+function requiredSeedPassword(name: string, fallback: string): string {
+  const value = process.env[name];
+  if (process.env.NODE_ENV === "production") {
+    if (!value || value.length < 12 || value.length > 256) throw new Error(`${name} must be set to a unique password of 12-256 characters in production`);
+    return value;
+  }
+  return value || fallback;
+}
+
 function hoursAgo(h: number): string { return new Date(Date.now() - h * 3_600_000).toISOString(); }
 
 function seedUsers(): User[] {
   return [
-    { id: "u-admin", username: "admin", displayName: "Nia Owiti", role: "admin", passwordHash: hashPassword("admin1234"), active: true, createdAt: hoursAgo(24 * 60), lastLoginAt: hoursAgo(1) },
-    { id: "u-op", username: "operator", displayName: "Dmitri Kovac", role: "operator", passwordHash: hashPassword("operator1234"), active: true, createdAt: hoursAgo(24 * 40), lastLoginAt: hoursAgo(3) },
-    { id: "u-auditor", username: "auditor", displayName: "Tendai Moyo", role: "auditor", passwordHash: hashPassword("auditor1234"), active: true, createdAt: hoursAgo(24 * 30), lastLoginAt: hoursAgo(20) },
-    { id: "u-viewer", username: "viewer", displayName: "Samir Patel", role: "viewer", passwordHash: hashPassword("viewer1234"), active: true, createdAt: hoursAgo(24 * 10), lastLoginAt: hoursAgo(5) },
+    { id: "u-admin", username: "admin", displayName: "Nia Owiti", role: "admin", passwordHash: hashPassword(requiredSeedPassword("CHOKEPOINT_ADMIN_PASSWORD", "admin1234")), active: true, createdAt: hoursAgo(24 * 60), lastLoginAt: hoursAgo(1) },
+    { id: "u-op", username: "operator", displayName: "Dmitri Kovac", role: "operator", passwordHash: hashPassword(requiredSeedPassword("CHOKEPOINT_OPERATOR_PASSWORD", "operator1234")), active: true, createdAt: hoursAgo(24 * 40), lastLoginAt: hoursAgo(3) },
+    { id: "u-auditor", username: "auditor", displayName: "Tendai Moyo", role: "auditor", passwordHash: hashPassword(requiredSeedPassword("CHOKEPOINT_AUDITOR_PASSWORD", "auditor1234")), active: true, createdAt: hoursAgo(24 * 30), lastLoginAt: hoursAgo(20) },
+    { id: "u-viewer", username: "viewer", displayName: "Samir Patel", role: "viewer", passwordHash: hashPassword(requiredSeedPassword("CHOKEPOINT_VIEWER_PASSWORD", "viewer1234")), active: true, createdAt: hoursAgo(24 * 10), lastLoginAt: hoursAgo(5) },
   ];
 }
 
