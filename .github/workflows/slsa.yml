@@ -57,7 +57,7 @@ jobs:
           cat ../digests.txt | base64 -d
 
       - name: Upload artifacts for provenance
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: slsa-artifacts
           path: |
