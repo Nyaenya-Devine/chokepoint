@@ -77,6 +77,6 @@
     "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "artifactName": "Chokepoint-Setup-${version}.${ext}" },
     "publish": { "provider": "github", "owner": "Nyaenya-Devine", "repo": "chokepoint", "private": false, "releaseType": "release" }
   },
-  "engines": { "node": ">=18.18.0" },
+  "engines": { "node": ">=22.12.0" },
   "keywords": ["least-privilege", "dual-control", "tamper-evident", "hmac", "hash-chain", "security", "owasp", "rbac", "siem", "electron", "desktop-app"]
 }
