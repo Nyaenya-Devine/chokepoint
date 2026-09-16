@@ -1,100 +1,74 @@
-# Chokepoint 🔐 v3.1 — World-Class Expert
+# Chokepoint 🔐 v3.1 — Least-Privilege Security Control Plane
 
 ![CI](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/ci.yml/badge.svg)
 ![Security](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/security.yml/badge.svg)
-![CodeQL](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/security.yml/badge.svg)
-![Electron Release](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/electron-release.yml/badge.svg)
-![SBOM](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/sbom.yml/badge.svg)
-![SLSA](https://github.com/Nyaenya-Devine/chokepoint/actions/workflows/slsa.yml/badge.svg)
-![Signed Commits](https://img.shields.io/badge/Commits-Signed%20Verified-brightgreen?logo=git)
-![Electron](https://img.shields.io/badge/Electron-32.3.3-47848F?logo=electron)
+![Electron](https://img.shields.io/badge/Electron-44.3.0-47848F?logo=electron)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 **Least-privilege access control & tamper-evident audit for sensitive operations — humans and AI agents.**
 
-Chokepoint is a full-stack security product built to answer one question: *how do you
-let people — and increasingly, AI agents — perform high-impact actions without giving
-anyone enough authority to abuse it?*
+Chokepoint is a full-stack security product with role-based authentication, two-person approval, a hash-chained tamper-evident audit log, explainable anomaly detection, policy simulation and SIEM export controls.
 
-It is a live, installable web app with real role-based authentication, a working
-two-person (dual-control) approval workflow, a hash-chained tamper-evident audit log,
-and explainable anomaly detection. It is built on the **2026 OWASP Agentic AI Top 10**
-failure **ASI03 — Identity & Privilege Abuse**.
-
-> **Try it:** sign in with a one-click demo account on the [live site](https://chokepoint-demo.vercel.app) — no signup. A recruiter can be inside the console in 30 seconds.
-
-> ▶️ **Demo video:** watch the [28-second product demo](docs/demo/chokepoint-demo.mp4) (YouTube/LinkedIn-ready, original music — safe to post).
-
-> **Merged:** Android Reset Lab (Python simulation proving 6/6 attacks detected, 68 tests, P4 Cerberus God Mode — Argon2id, HMAC-signed logs, TOTP MFA, Merkle, Cedar ABAC, WebAuthn, Play Integrity, DPoP) is now the **simulation engine** for Chokepoint. Same core: dual-control + tamper-evident audit. Chokepoint is the live web product (Next.js, 26 routes, PWA), Reset Lab is the Python proof. Vercel cleaned from 7 → 5 projects, duplicate chokepoint (tau) and android-reset-lab Vercel deleted — single source of truth: chokepoint-demo.vercel.app. GitHub: github.com/Nyaenya-Devine/chokepoint (main) + android-reset-lab (simulation layer, archived reference).
-
----
+> **Hosted demo:** deployments should use deployment-specific credentials. Production deployments must never rely on repository-shipped passwords.
 
 ## ✨ What it does
 
 | Feature | Why it matters |
 | --- | --- |
-| **Role-based auth** (viewer / auditor / operator / admin) | Least privilege by default; a single policy gate on every action. |
-| **Dual-control (two-person rule)** | Irreversible actions need a second, *distinct*, authorized approver — separation of duties. |
-| **Tamper-evident audit log** | Every event is SHA-256 hash-chained **and** HMAC-signed; editing/deleting/reordering breaks the chain and is provable. |
-| **Anomaly / risk detection** | Failed logins, after-hours privilege, unknown sources, privilege escalation, and automation are surfaced with human-readable reasons. |
-| **Live dashboard** | Risk index, severity distribution, anomaly feed, and integrity verification. |
-| **Installable PWA** | Runs on desktop and Android; Capacitor path for store-ready native builds. |
-
----
+| **Role-based auth** | Every protected API action is authorization-gated. |
+| **Dual-control** | Irreversible actions require a second, distinct, authorized approver. |
+| **Tamper-evident audit log** | Events are SHA-256 hash-chained and HMAC-signed. |
+| **Anomaly / risk detection** | Suspicious activity is surfaced with human-readable reasons. |
+| **Policy simulation** | Policies can be tested without committing changes. |
+| **SIEM export** | Audit export requires the dedicated `export_log` permission. |
+| **Electron desktop build** | Hardened Electron packaging with signed-update verification. |
 
 ## 🚀 Getting started
 
-Requires **Node 20.19+**.
+Requires **Node 22+** for the current Electron toolchain.
 
 ```bash
 git clone <your-fork> && cd chokepoint
 npm install
-npm run dev        # http://localhost:3000
+npm run dev
 ```
 
-Production build & run:
+Production build:
 
 ```bash
 npm run build
 npm run start
 ```
 
-**Demo accounts** (seeded in-memory):
+### Production credentials
 
-| Username | Password | Role |
-| --- | --- | --- |
-| `admin` | `admin1234` | Admin |
-| `operator` | `operator1234` | Operator |
-| `auditor` | `auditor1234` | Auditor |
-| `viewer` | `viewer1234` | Viewer |
+Development mode retains convenience seed accounts for the security lab. **They are not production credentials.**
 
-> Set `CHOKEPOINT_SECRET` and `CHOKEPOINT_SESSION_SECRET` in production (see
-> [`SECURITY.md`](./public/SECURITY.md)). Sensitive demo values are used only so the app
-> runs out of the box.
+Production requires unique deployment values for:
 
----
+```text
+CHOKEPOINT_SECRET=<32+ random characters>
+CHOKEPOINT_SESSION_SECRET=<strong random session secret>
+CHOKEPOINT_ADMIN_PASSWORD=<unique password>
+CHOKEPOINT_OPERATOR_PASSWORD=<unique password>
+CHOKEPOINT_AUDITOR_PASSWORD=<unique password>
+CHOKEPOINT_VIEWER_PASSWORD=<unique password>
+```
+
+Never commit real values. Production startup fails closed when required secrets are absent or too weak.
 
 ## 🧪 Tests
 
 ```bash
-npm test        # runs Vitest — 26 tests across crypto, ledger, authz, anomaly
+npm test
 ```
 
-The tests are not toy smoke tests. They prove the **security properties**:
-
-- `tests/ledger.test.ts` — the audit chain **detects** altered payloads, **deleted**
-  entries, **reordered** entries, and **re-signed** (wrong-key) entries.
-- `tests/authz.test.ts` — the policy matrix and dual-control (distinct-approver +
-  authorized-approver) rules.
-- `tests/crypto.test.ts` — PBKDF2 (salted, timing-safe), HMAC keyed signatures.
-- `tests/anomaly.test.ts` — signals fire on the intended conditions.
-
----
+The tests cover ledger tamper detection, RBAC and dual-control rules, password hashing, timing-safe comparisons and anomaly detection.
 
 ## 🏗️ Architecture
 
-```
-Clients (web / PWA / Capacitor)
+```text
+Clients (web / PWA / desktop)
         │
         ▼
 Next.js App Router ──► Session (HttpOnly, SameSite=Strict, signed cookie)
@@ -106,72 +80,35 @@ Next.js App Router ──► Session (HttpOnly, SameSite=Strict, signed cookie)
   Tamper-evident audit ledger (hash chain + HMAC)  ──►  Anomaly detection
 ```
 
-View the full **architecture diagram** at [`/architecture.svg`](./public/architecture.svg).
-
 Key modules:
 
 | Module | Responsibility |
 | --- | --- |
 | `lib/crypto.ts` | PBKDF2-SHA256, HMAC-SHA256, SHA-256, constant-time compare. |
-| `lib/ledger.ts` | Append-only, hash-chained, HMAC-signed event log + `verifyChain()`. |
-| `lib/authz.ts` | RBAC policy matrix, `can()`, dual-control enforcement. |
-| `lib/anomaly.ts` | Explainable risk scoring & severity classification. |
-| `lib/session.ts` | Signed, HttpOnly session cookie. |
-| `lib/store.ts` | In-memory store + seed data (demo). |
-
----
-
-## 📲 Install as an app (PWA / native)
-
-**PWA (desktop + Android):** the app ships a manifest and service worker. From Chrome or
-Edge on desktop: *Install icon* → *Install*. On Android Chrome: *Add to Home screen* →
-*Install as app*.
-
-**Native (Capacitor) path** for a store-ready Android/PC build:
-
-```bash
-npm i -D @capacitor/core @capacitor/cli @capacitor/android
-npx cap init chokepoint "com.dev.chokepoint" --web-dir=out
-npm run build
-npx cap add android
-npx cap sync
-npx cap open android   # build/run in Android Studio
-```
-
-The same can target desktop via Capacitor's Electron/macOS/Windows plugins.
-
----
+| `lib/ledger.ts` | Append-only hash-chained, HMAC-signed event log. |
+| `lib/authz.ts` | RBAC policy matrix and dual-control authorization. |
+| `lib/anomaly.ts` | Explainable risk scoring and severity classification. |
+| `lib/session.ts` | Signed, HttpOnly, expiring session cookie. |
+| `lib/store.ts` | In-memory store + development seed data. |
 
 ## 🛡️ Security posture
 
-See [**SECURITY.md**](./public/SECURITY.md) for the full threat model, the
-tamper-evidence construction, the cryptographic decisions, and honest notes on what
-would change in production. Highlights:
+See [**SECURITY.md**](./public/SECURITY.md) for the threat model and security decisions.
 
-- **Tamper-evidence:** hash chain + HMAC; strict order-preserving verification that
-  detects alteration, deletion, and reordering.
-- **Separation of duties:** a person can never approve their own privileged change.
-- **Credential hygiene:** PBKDF2-SHA256, per-user salt, timing-safe compares.
-- **Session hygiene:** HttpOnly, SameSite=Strict, signed, expiring cookie. The
-  `Secure` flag is set only when the connection is actually HTTPS (via
-  `x-forwarded-proto`), so it's enforced behind Vercel's TLS yet also works over
-  a plain-HTTP local preview.
-- **Transport hardening:** strict CSP and security headers.
-- **No vulnerable runtime deps:** `npm audit` reports **0 vulnerabilities**.
+Highlights:
 
----
+- **Tamper-evidence:** hash chain + HMAC with strict order-preserving verification.
+- **Separation of duties:** a requester cannot approve their own privileged mandate.
+- **Credential hygiene:** PBKDF2-SHA256, per-user salt, timing-safe comparisons.
+- **Session hygiene:** HttpOnly, SameSite=Strict, signed, expiring cookies.
+- **Transport hardening:** CSP, HSTS, frame protection, `nosniff` and Permissions-Policy.
+- **Authorization hardening:** privileged exports and mutation endpoints use dedicated permissions.
+- **Production fail-closed:** strong secrets and deployment-specific passwords are required.
+- **Desktop hardening:** Electron 44.3.0, sandbox, context isolation, disabled Node integration and signed-update verification.
+- **Supply-chain controls:** dependency audit, CodeQL, dependency review, secret scanning and SBOM generation run in CI.
 
 ## 🧭 Project intent
 
-This is a deliberate *upgrade* from an earlier, simpler project, and it's designed to
-show what a security-minded, audit-disciplined engineer does when they own something
-end to end: real auth, a real control plane, a provable audit trail, tests, docs, and a
-clean deploy.
+Chokepoint demonstrates end-to-end security ownership: authentication, authorization boundaries, dual control, a provable audit trail, security tests, automated scanning, supply-chain controls and hardened desktop packaging.
 
-Built with **Next.js 16 (App Router) + TypeScript**, styled by hand, tested with Vitest,
-deployed to **Vercel**.
-
----
-
-*Chokepoint is a named and productized demo. The security reasoning in `lib/` and the
-write-up in `SECURITY.md` are the substance — the UI is the proof it runs.*
+Built with **Next.js 16 (App Router) + TypeScript**, tested with Vitest and deployed to Vercel.
