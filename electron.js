@@ -12,6 +12,15 @@ autoUpdater.autoInstallOnAppQuit = true;
 
 let mainWindow;
 
+function openSafeExternal(url) {
+  if (typeof url !== 'string' || !/^https:\/\//i.test(url)) {
+    log.warn(`Blocked unsafe external URL: ${String(url).slice(0, 200)}`);
+    return false;
+  }
+  shell.openExternal(url).catch((err) => log.warn(`External URL failed: ${err.message}`));
+  return true;
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1400,
@@ -86,7 +95,7 @@ function createWindow() {
   });
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
+    openSafeExternal(url);
     return { action: 'deny' };
   });
 
@@ -108,8 +117,6 @@ function createWindow() {
       notification.show();
     }
   });
-
-  mainWindow.on('closed', () => { mainWindow = null; });
 }
 
 autoUpdater.on('checking-for-update', () => { log.info('Checking for update...'); if (mainWindow) mainWindow.webContents.send('update-checking'); });
@@ -180,7 +187,7 @@ const template = [
     submenu: [
       { label: 'New Approval Request', accelerator: 'CmdOrCtrl+N', click: () => mainWindow.webContents.send('new-request') },
       { label: 'Export Audit Log', accelerator: 'CmdOrCtrl+E', click: () => mainWindow.webContents.send('export-audit') },
-      { label: 'Export SBOM', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/blob/main/sbom.json') },
+      { label: 'Export SBOM', click: () => openSafeExternal('https://github.com/Nyaenya-Devine/chokepoint/blob/main/sbom.json') },
       { type: 'separator' },
       { role: 'close' },
     ],
@@ -212,12 +219,12 @@ const template = [
   {
     label: 'Security',
     submenu: [
-      { label: 'Security Policy', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/blob/main/SECURITY.md') },
-      { label: 'Threat Model', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/blob/main/THREAT_MODEL.md') },
+      { label: 'Security Policy', click: () => openSafeExternal('https://github.com/Nyaenya-Devine/chokepoint/blob/main/SECURITY.md') },
+      { label: 'Threat Model', click: () => openSafeExternal('https://github.com/Nyaenya-Devine/chokepoint/blob/main/THREAT_MODEL.md') },
       { label: 'Audit Ledger (HMAC)', click: () => mainWindow.webContents.send('open-ledger') },
       { label: 'Check for Updates — Secure', click: () => { if (!isDev) autoUpdater.checkForUpdates(); } },
       { type: 'separator' },
-      { label: 'Report Security Issue', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/security/advisories/new') },
+      { label: 'Report Security Issue', click: () => openSafeExternal('https://github.com/Nyaenya-Devine/chokepoint/security/advisories/new') },
     ],
   },
   {
@@ -230,9 +237,9 @@ const template = [
       { label: 'Training Lab', click: () => mainWindow.webContents.send('open-training') },
       { label: 'Keyboard Shortcuts', accelerator: 'CmdOrCtrl+/', click: () => mainWindow.webContents.send('show-shortcuts') },
       { type: 'separator' },
-      { label: 'Chokepoint GitHub', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint') },
-      { label: 'Report Issue', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/issues') },
-      { label: 'Release Notes', click: () => shell.openExternal('https://github.com/Nyaenya-Devine/chokepoint/releases') },
+      { label: 'Chokepoint GitHub', click: () => openSafeExternal('https://github.com/Nyaenya-Devine/chokepoint') },
+      { label: 'Report Issue', click: () => openSafeExternal('https://github.com/Nyaenya-Devine/chokepoint/issues') },
+      { label: 'Release Notes', click: () => openSafeExternal('https://github.com/Nyaenya-Devine/chokepoint/releases') },
     ],
   },
 ];
@@ -250,9 +257,9 @@ app.on('web-contents-created', (event, contents) => {
   contents.on('will-navigate', (event, navigationUrl) => {
     const allowed = ['http://localhost:3000', 'https://chokepoint-demo.vercel.app'];
     const isAllowed = allowed.some(o => navigationUrl.startsWith(o)) || navigationUrl.startsWith('file://');
-    if (!isAllowed) { event.preventDefault(); log.warn(`Blocked nav to ${navigationUrl}`); shell.openExternal(navigationUrl); }
+    if (!isAllowed) { event.preventDefault(); openSafeExternal(navigationUrl); }
   });
-  contents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: 'deny' }; });
+  contents.setWindowOpenHandler(({ url }) => { openSafeExternal(url); return { action: 'deny' }; });
 });
 
 const gotLock = app.requestSingleInstanceLock();
