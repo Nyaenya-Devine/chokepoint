@@ -1,7 +1,6 @@
 /**
- * RequestQueue — Real-time endless high-impact requests that need 4-eyes approval
- * Like OrbitDesk TicketQueue but for security operations
- * Clean bento design, Linear dark-first violet, not basic AI
+ * RequestQueue — Real-time privileged requests requiring dual-control approval
+ * Security operations queue with tamper-evident audit and risk classification
  */
 
 'use client';
@@ -28,9 +27,12 @@ const riskConfig = {
   Low: { color: 'text-zinc-400', bg: 'bg-zinc-500/10', dot: 'bg-zinc-500' },
 };
 
-const tenantConfig: Record<string, { color: string; bg: string; dot: string }> = {
+const envConfig: Record<string, { color: string; bg: string; dot: string }> = {
+  prod: { color: 'text-violet-400', bg: 'bg-violet-500/10', dot: 'bg-violet-500' },
+  staging: { color: 'text-blue-400', bg: 'bg-blue-500/10', dot: 'bg-blue-500' },
+  dev: { color: 'text-emerald-400', bg: 'bg-emerald-500/10', dot: 'bg-emerald-500' },
   novatech: { color: 'text-violet-400', bg: 'bg-violet-500/10', dot: 'bg-violet-500' },
-  bloom: { color: 'text-pink-400', bg: 'bg-pink-500/10', dot: 'bg-pink-500' },
+  bloom: { color: 'text-blue-400', bg: 'bg-blue-500/10', dot: 'bg-blue-500' },
   apex: { color: 'text-emerald-400', bg: 'bg-emerald-500/10', dot: 'bg-emerald-500' },
 };
 
@@ -70,28 +72,26 @@ export function RequestQueue({ onSelectRequest, selectedId }: Props) {
 
   return (
     <div className="flex flex-col h-full bg-[#0a0a0a] rounded-2xl border border-zinc-800/60 shadow-sm overflow-hidden">
-      {/* Header — quiet chrome like OrbitDesk */}
       <div className="p-4 border-b border-zinc-800/60 bg-zinc-900/50">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <h2 className="text-[13px] font-semibold tracking-[0.02em] text-zinc-100">Live Requests</h2>
+            <h2 className="text-[13px] font-semibold tracking-[0.02em] text-zinc-100">Privileged Requests</h2>
             <span className="text-[11px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700/50">
               {requests.length} total • {pendingCount} pending
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-            <span className="text-[10px] font-medium tracking-widest text-zinc-500 uppercase">Live • Endless</span>
+            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-medium tracking-widest text-zinc-500 uppercase">Live</span>
           </div>
         </div>
 
-        {/* Search */}
         <div className="relative mb-3">
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search requests, codes, requesters, tenants..."
+            placeholder="Search by code, requester, or operation..."
             className="w-full h-8 pl-8 pr-3 rounded-lg bg-zinc-800/60 border border-zinc-700/50 text-[13px] text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
           />
           <svg className="absolute left-2.5 top-2 h-3.5 w-3.5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,7 +99,6 @@ export function RequestQueue({ onSelectRequest, selectedId }: Props) {
           </svg>
         </div>
 
-        {/* Filters — bento pills */}
         <div className="flex items-center gap-1.5">
           {[
             { id: 'all', label: 'All', count: requests.length },
@@ -122,7 +121,6 @@ export function RequestQueue({ onSelectRequest, selectedId }: Props) {
         </div>
       </div>
 
-      {/* List */}
       <div className="flex-1 overflow-y-auto">
         {filtered.length === 0 ? (
           <div className="p-8 text-center">
@@ -130,14 +128,14 @@ export function RequestQueue({ onSelectRequest, selectedId }: Props) {
               <span className="text-zinc-500 text-sm">◍</span>
             </div>
             <p className="text-[13px] text-zinc-500">No requests match filter</p>
-            <p className="text-[11px] text-zinc-600 mt-1">Real-time engine will generate new ones</p>
+            <p className="text-[11px] text-zinc-600 mt-1">Real-time engine generates new requests</p>
           </div>
         ) : (
           <div className="divide-y divide-zinc-800/40">
             {filtered.map(req => {
               const p = priorityConfig[req.priority];
               const r = riskConfig[req.risk as keyof typeof riskConfig];
-              const t = tenantConfig[req.tenantId] || tenantConfig.novatech;
+              const t = envConfig[req.tenantId] || envConfig.prod;
               const isSelected = selectedId === req.id;
               const isExpiring = req.timeLeftMs < 2 * 60_000 && req.status === 'pending';
 
@@ -204,7 +202,6 @@ export function RequestQueue({ onSelectRequest, selectedId }: Props) {
         )}
       </div>
 
-      {/* Footer stats — quiet chrome */}
       <div className="p-3 border-t border-zinc-800/60 bg-zinc-900/30 flex items-center justify-between">
         <div className="flex items-center gap-3 text-[11px] text-zinc-500">
           <span className="flex items-center gap-1.5">
@@ -213,10 +210,10 @@ export function RequestQueue({ onSelectRequest, selectedId }: Props) {
           </span>
           <span className="flex items-center gap-1.5">
             <span className="h-1 w-1 rounded-full bg-red-500" />
-            {p1Count} P1 critical
+            {p1Count} critical
           </span>
         </div>
-        <span className="text-[10px] text-zinc-600 font-mono">Real-time • HMAC-signed • Hash-chained</span>
+        <span className="text-[10px] text-zinc-600 font-mono">HMAC-signed • Hash-chained • Tamper-evident</span>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 /**
- * ApproverRoster — Pure security: approvers with roles, not operators with 44h/week conflicts
- * Focused: RBAC, distinct approver, separation of duties, no OrbitDesk coaching drama
+ * ApproverRoster — Role-based approvers with separation of duties
  */
 
 'use client';
@@ -17,42 +16,42 @@ interface Approver {
 }
 
 const approvers: Approver[] = [
-  { id: '1', name: 'Nia Owiti', role: 'Admin', status: 'available', canApprove: ['P1 Critical', 'Privilege escalation', 'Fleet wipe'], workload: '2 pending', lastAction: 'Approved PRIV-001 2m ago', trustScore: 98 },
-  { id: '2', name: 'Alex Rivera', role: 'Admin', status: 'available', canApprove: ['P1 Critical', 'Agent access'], workload: '1 pending', lastAction: 'Approved AGENT-002 5m ago', trustScore: 96 },
-  { id: '3', name: 'Priya Singh', role: 'Auditor', status: 'available', canApprove: ['DLP disable', 'Compliance exception', 'SIEM export'], workload: '0 pending', lastAction: 'Verified ledger 8m ago', trustScore: 99 },
+  { id: '1', name: 'Nia Owiti', role: 'Admin', status: 'available', canApprove: ['Critical privilege', 'Escalation', 'Fleet operation'], workload: '2 pending', lastAction: 'Approved PRIV-001 2m ago', trustScore: 98 },
+  { id: '2', name: 'Alex Rivera', role: 'Admin', status: 'available', canApprove: ['Critical operation', 'Agent access'], workload: '1 pending', lastAction: 'Approved AGENT-002 5m ago', trustScore: 96 },
+  { id: '3', name: 'Priya Singh', role: 'Auditor', status: 'available', canApprove: ['Policy exception', 'Compliance review', 'Export'], workload: '0 pending', lastAction: 'Verified ledger 8m ago', trustScore: 99 },
   { id: '4', name: 'Dmitri Kovac', role: 'Operator', status: 'busy', canApprove: [], workload: '3 requests', lastAction: 'Created FLEET-004', trustScore: 85 },
 ];
 
 export function ApproverRoster() {
   return (
-    <div className="rounded-[16px] border border-white/[0.06] bg-[#0a0a0a] p-5">
-      <h3 className="text-[13px] font-semibold flex items-center gap-2 mb-4">
+    <div className="rounded-[16px] border border-zinc-800 bg-[#0a0a0a] p-5">
+      <h3 className="text-[13px] font-semibold flex items-center gap-2 mb-4 text-zinc-100">
         <span className="h-6 w-6 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">👥</span>
-        Approvers — RBAC, distinct, separation of duties
+        Approvers — Role-based access with separation of duties
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {approvers.map(a => (
-          <div key={a.id} className="p-3 rounded-[12px] bg-[#08080A] border border-white/[0.06] hover:border-white/[0.10] transition">
+          <div key={a.id} className="p-3 rounded-[12px] bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition">
             <div className="flex items-center gap-2.5">
-              <div className="h-9 w-9 rounded-full bg-white/[0.06] border border-white/[0.08] flex items-center justify-center text-[12px] font-medium">{a.name.split(' ').map(n=>n[0]).join('')}</div>
+              <div className="h-9 w-9 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-[12px] font-medium text-zinc-200">{a.name.split(' ').map(n=>n[0]).join('')}</div>
               <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-medium text-[#F5F3EF] flex items-center gap-2">{a.name} <span className={`text-[10px] px-1.5 py-0.5 rounded-full border font-mono uppercase ${a.role==='Admin' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : a.role==='Auditor' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' : a.role==='Operator' ? 'bg-violet-500/10 text-violet-400 border-violet-500/20' : 'bg-white/5 text-white/40 border-white/10'}`}>{a.role}</span> <span className={`h-2 w-2 rounded-full ${a.status==='available' ? 'bg-emerald-500' : a.status==='busy' ? 'bg-amber-500' : 'bg-zinc-600'}`} /></p>
-                <p className="text-[11px] text-white/40">{a.workload} • Trust {a.trustScore}% • {a.lastAction}</p>
+                <p className="text-[13px] font-medium text-zinc-100 flex items-center gap-2">{a.name} <span className={`text-[10px] px-1.5 py-0.5 rounded-full border font-mono uppercase ${a.role==='Admin' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : a.role==='Auditor' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' : a.role==='Operator' ? 'bg-violet-500/10 text-violet-400 border-violet-500/20' : 'bg-zinc-800 text-zinc-500 border-zinc-700'}`}>{a.role}</span> <span className={`h-2 w-2 rounded-full ${a.status==='available' ? 'bg-emerald-500' : a.status==='busy' ? 'bg-amber-500' : 'bg-zinc-600'}`} /></p>
+                <p className="text-[11px] text-zinc-500">{a.workload} • Trust {a.trustScore}% • {a.lastAction}</p>
               </div>
             </div>
             {a.canApprove.length > 0 && (
               <div className="mt-2.5 flex flex-wrap gap-1">
-                {a.canApprove.map(cap => <span key={cap} className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-white/40">{cap}</span>)}
+                {a.canApprove.map(cap => <span key={cap} className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-400">{cap}</span>)}
               </div>
             )}
-            {a.role === 'Operator' && <p className="text-[10px] text-white/20 mt-2">Cannot approve own requests • Distinct approver required • Separation of duties</p>}
+            {a.role === 'Operator' && <p className="text-[10px] text-zinc-500 mt-2">Cannot approve own requests • Distinct approver required</p>}
           </div>
         ))}
       </div>
 
-      <div className="mt-4 p-3 rounded-[12px] bg-white/[0.03] border border-white/[0.06]">
-        <p className="text-[11px] text-white/40 leading-[1.4]">Pure security: 4 roles Viewer/Operator/Auditor/Admin, default-deny, explicit allow, requester cannot approve own, distinct authorized approver, session TTL + CSRF. No 44h/week conflicts, no SBI coaching drama, no public shaming — that's OrbitDesk, not Chokepoint. Proof: authz.test.ts</p>
+      <div className="mt-4 p-3 rounded-[12px] bg-zinc-900 border border-zinc-800">
+        <p className="text-[11px] text-zinc-500 leading-[1.4]">Four roles with default-deny and explicit allow. Requester cannot approve own privileged operation. Distinct authorized approver required with session validation.</p>
       </div>
     </div>
   );

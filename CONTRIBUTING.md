@@ -49,4 +49,4 @@ Thanks for your interest! This repo follows **Build → Test → Break → Learn
 - See `SECURITY.md` → Private disclosure via GitHub Security Advisory
 - Response SLA: 24h ack, 72h triage, 7d critical fix
 
-Thank you for making this more human, not AI-basic!
+Thank you for contributing to this project.
