@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Setup Node 20
+      - name: Setup Node 22
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
       - name: Install deps — npm ci
         run: npm ci --ignore-scripts
@@ -37,15 +37,18 @@ jobs:
       - name: Check for leaked secrets
         run: |
           set -eu
-          echo "Scanning for common credential formats..."
           ! grep -R -E "ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{20,}" --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=dist --exclude-dir=.git .
-          echo "No obvious credential patterns found"
-      - name: Verify essential files
+      - name: Verify essential files and Electron hardening
         run: |
+          set -eu
           test -f electron.js
           test -f preload.js
           grep -q "electron-updater" package.json
           grep -q "autoUpdater" electron.js
+          grep -q "contextIsolation: true" electron.js
+          grep -q "nodeIntegration: false" electron.js
+          grep -q "sandbox: true" electron.js
+          grep -q "webSecurity: true" electron.js
 
   sbom:
     name: SBOM — CycloneDX
@@ -54,7 +57,8 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '22'
+          cache: 'npm'
       - run: npm ci --ignore-scripts
       - name: Generate SBOM
         run: npx @cyclonedx/cyclonedx-npm --output-file sbom.json --output-format json
@@ -63,3 +67,4 @@ jobs:
         with:
           name: sbom
           path: sbom.json
+          if-no-files-found: error
