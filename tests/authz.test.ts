@@ -1,12 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  can,
-  requiresDualControl,
-  enforceDualControl,
-  minRoleFor,
-  DUAL_CONTROL_ACTIONS,
-  type Role,
-} from "../lib/authz";
+import { can, requiresDualControl, enforceDualControl, minRoleFor, DUAL_CONTROL_ACTIONS, isAction, type Role } from "../lib/authz";
 
 describe("RBAC policy", () => {
   it("viewers can only read", () => {
@@ -36,6 +29,14 @@ describe("RBAC policy", () => {
     expect(can("admin", "approve")).toBe(true);
   });
 
+  it("validates untrusted action names at runtime", () => {
+    expect(isAction("grant_role")).toBe(true);
+    expect(isAction("run_scan")).toBe(true);
+    expect(isAction("grant_admin_everything")).toBe(false);
+    expect(isAction(null)).toBe(false);
+    expect(isAction(123)).toBe(false);
+  });
+
   it("identifies dual-control actions", () => {
     for (const a of DUAL_CONTROL_ACTIONS) expect(requiresDualControl(a)).toBe(true);
     expect(requiresDualControl("view_log")).toBe(false);
@@ -49,32 +50,14 @@ describe("RBAC policy", () => {
 });
 
 describe("dual-control / separation of duties", () => {
-  const base = {
-    action: "grant_role" as const,
-    requesterRole: "operator" as Role,
-    approverRole: "admin" as Role,
-    requesterId: "u-op",
-    approverId: "u-admin",
-  };
+  const base = { action: "grant_role" as const, requesterRole: "operator" as Role, approverRole: "admin" as Role, requesterId: "u-op", approverId: "u-admin" };
 
   it("blocks a principal approving their own request", () => {
     const d = enforceDualControl({ ...base, approverId: "u-op" });
     expect(d.allowed).toBe(false);
     expect(d.reason).toMatch(/distinct approver/);
   });
-
-  it("blocks an unprivileged approver", () => {
-    const d = enforceDualControl({ ...base, approverRole: "viewer" });
-    expect(d.allowed).toBe(false);
-  });
-
-  it("allows a distinct, authorized approver", () => {
-    const d = enforceDualControl(base);
-    expect(d.allowed).toBe(true);
-  });
-
-  it("does not require dual control for non-mandated actions", () => {
-    const d = enforceDualControl({ ...base, action: "run_scan" });
-    expect(d.allowed).toBe(true);
-  });
+  it("blocks an unprivileged approver", () => expect(enforceDualControl({ ...base, approverRole: "viewer" }).allowed).toBe(false));
+  it("allows a distinct, authorized approver", () => expect(enforceDualControl(base).allowed).toBe(true));
+  it("does not require dual control for non-mandated actions", () => expect(enforceDualControl({ ...base, action: "run_scan" }).allowed).toBe(true));
 });
