@@ -13,16 +13,11 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
     return NextResponse.json({ error: "decision must be 'approved' or 'rejected'." }, { status: 400 });
   }
   const decision: "approved" | "rejected" = body.decision;
-
   const mandate = store.mandates.find((m) => m.id === id);
   if (!mandate) return NextResponse.json({ error: "Mandate not found." }, { status: 404 });
   if (mandate.state !== "pending") return NextResponse.json({ error: `Mandate is already ${mandate.state}.` }, { status: 409 });
-  if (Date.now() >= new Date(mandate.expiresAt).getTime()) {
-    return NextResponse.json({ error: "Mandate has expired." }, { status: 409 });
-  }
-  if (!isAction(mandate.action) || !isAction(mandate.action)) {
-    return NextResponse.json({ error: "Mandate contains an invalid action." }, { status: 409 });
-  }
+  if (Date.now() >= new Date(mandate.expiresAt).getTime()) return NextResponse.json({ error: "Mandate has expired." }, { status: 409 });
+  if (!isAction(mandate.action)) return NextResponse.json({ error: "Mandate contains an invalid action." }, { status: 409 });
 
   const requester = store.getUserById(mandate.requestedBy);
   const d = enforceDualControl({
