@@ -34,7 +34,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@cyclonedx/cyclonedx-npm": "^3.0.5",
+    "@cyclonedx/cyclonedx-npm": "^6.0.1",
     "@types/node": "^20.19.0",
     "@types/react": "19.2.8",
     "@types/react-dom": "19.1.11",
@@ -49,13 +49,39 @@
     "appId": "com.chokepoint.security",
     "productName": "Chokepoint",
     "copyright": "© 2026 Chokepoint — Least-Privilege Dual-Control Tamper-Evident — MIT — Devine Nyaenya",
-    "directories": { "output": "dist", "buildResources": "public" },
-    "files": ["electron.js", "preload.js", "out/**/*", "public/**/*", "!**/*.map"],
+    "directories": {
+      "output": "dist",
+      "buildResources": "public"
+    },
+    "files": [
+      "electron.js",
+      "preload.js",
+      "out/**/*",
+      "public/**/*",
+      "!**/*.map"
+    ],
     "asar": true,
-    "asarUnpack": ["**/*.node"],
+    "asarUnpack": [
+      "**/*.node"
+    ],
     "mac": {
       "category": "public.app-category.business",
-      "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }, { "target": "zip", "arch": ["x64", "arm64"] }],
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
       "icon": "public/icon-512.png",
       "darkModeSupport": true,
       "gatekeeperAssess": true,
@@ -64,19 +90,70 @@
       "entitlementsInherit": "build/entitlements.mac.plist"
     },
     "win": {
-      "target": [{ "target": "nsis", "arch": ["x64"] }, { "target": "portable", "arch": ["x64"] }],
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "public/icon-512.png",
       "publisherName": "Devine Nyaenya",
       "verifyUpdateCodeSignature": true
     },
     "linux": {
-      "target": [{ "target": "AppImage", "arch": ["x64"] }, { "target": "deb", "arch": ["x64"] }],
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "public/icon-512.png",
       "category": "Office"
     },
-    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "artifactName": "Chokepoint-Setup-${version}.${ext}" },
-    "publish": { "provider": "github", "owner": "Nyaenya-Devine", "repo": "chokepoint", "private": false, "releaseType": "release" }
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "artifactName": "Chokepoint-Setup-${version}.${ext}"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "Nyaenya-Devine",
+      "repo": "chokepoint",
+      "private": false,
+      "releaseType": "release"
+    }
   },
-  "engines": { "node": ">=22.12.0" },
-  "keywords": ["least-privilege", "dual-control", "tamper-evident", "hmac", "hash-chain", "security", "owasp", "rbac", "siem", "electron", "desktop-app"]
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "keywords": [
+    "least-privilege",
+    "dual-control",
+    "tamper-evident",
+    "hmac",
+    "hash-chain",
+    "security",
+    "owasp",
+    "rbac",
+    "siem",
+    "electron",
+    "desktop-app"
+  ]
 }
