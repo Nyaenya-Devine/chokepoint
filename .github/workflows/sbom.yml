@@ -30,7 +30,7 @@ jobs:
           npx @cyclonedx/cyclonedx-npm --output-file sbom.xml --output-format xml --spec-version 1.6
           ls -lh sbom.*
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: sbom-cyclonedx
           path: |
