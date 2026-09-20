@@ -89,7 +89,7 @@ jobs:
       contents: read
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: slsa-artifacts
           path: ./artifacts
@@ -98,7 +98,7 @@ jobs:
         uses: slsa-framework/slsa-verifier/actions/installer@v2.7.0
 
       - name: Download provenance
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: ${{ needs.provenance.outputs.provenance-name }}
           path: ./provenance
