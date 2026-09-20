@@ -3,6 +3,11 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   images: { unoptimized: true },
+  experimental: {
+    // TypeScript 7 uses the native compiler and no longer exposes the legacy JS Compiler API.
+    // Next.js uses the project-local tsc CLI for type checking instead.
+    useTypeScriptCli: true,
+  },
   // Security headers via proxy.ts (nonce-based CSP) — best-in-class
   // This fallback ensures headers even if proxy is bypassed
   async headers() {
