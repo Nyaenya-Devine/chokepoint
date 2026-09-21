@@ -95,7 +95,7 @@ jobs:
           path: ./artifacts
 
       - name: Install slsa-verifier
-        uses: slsa-framework/slsa-verifier/actions/installer@v2.7.0
+        uses: slsa-framework/slsa-verifier/actions/installer@v2.7.1
 
       - name: Download provenance
         uses: actions/download-artifact@v8
