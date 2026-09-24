@@ -1,4 +1,5 @@
-import type { Role } from "./authz";
+import type { Action, Role } from "./authz";
+import type { BlastRadius, MandateEnvironment } from "./mandatePolicy";
 import type { LedgerEntry } from "./ledger";
 
 export interface User {
@@ -18,7 +19,7 @@ export type PublicUser = Omit<User, "passwordHash">;
 /** A pending dual-control request awaiting a second signature. */
 export interface Mandate {
   id: string;
-  action: string;
+  action: Action;
   target: string;
   requestedBy: string;
   approverId: string | null;
@@ -26,6 +27,10 @@ export interface Mandate {
   createdAt: string;
   expiresAt: string;
   reason: string;
+  purpose: string;
+  environment: MandateEnvironment;
+  blastRadius: BlastRadius;
+  contextFingerprint: string;
 }
 
 export interface Session {

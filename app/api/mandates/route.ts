@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { store } from "@/lib/store";
 import { requireRole } from "@/lib/apiauth";
 import { can, isAction, requiresDualControl, type Action } from "@/lib/authz";
+import { isBlastRadius, isMandateEnvironment, normalizeTtlMinutes } from "@/lib/mandatePolicy";
 
 export async function GET() {
   const auth = await requireRole("view_log");
@@ -31,7 +32,34 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Only operators or admins may request privileged mandates." }, { status: 403 });
   }
   const reason = typeof body.reason === "string" ? body.reason.trim().slice(0, 1000) : "";
-  const mandate = store.createMandate({ action, target: body.target.trim().slice(0, 200), requestedBy: auth.user.id, reason });
-  store.append({ actor: auth.user.username, actorRole: auth.role, action: "request_mandate", target: mandate.target, meta: { mandated: true, mandateId: mandate.id } });
+  const purpose = typeof body.purpose === "string" ? body.purpose.trim().slice(0, 500) : reason;
+  if (!purpose) {
+    return NextResponse.json({ error: "A business or incident purpose is required." }, { status: 400 });
+  }
+  const environment = isMandateEnvironment(body.environment) ? body.environment : "production";
+  const blastRadius = isBlastRadius(body.blastRadius) ? body.blastRadius : "single-resource";
+  const mandate = store.createMandate({
+    action,
+    target: body.target.trim().slice(0, 200),
+    requestedBy: auth.user.id,
+    reason,
+    purpose,
+    environment,
+    blastRadius,
+    ttlMinutes: normalizeTtlMinutes(body.ttlMinutes),
+  });
+  store.append({
+    actor: auth.user.username,
+    actorRole: auth.role,
+    action: "request_mandate",
+    target: mandate.target,
+    meta: {
+      mandated: true,
+      mandateId: mandate.id,
+      environment: mandate.environment,
+      blastRadius: mandate.blastRadius,
+      contextFingerprint: mandate.contextFingerprint,
+    },
+  });
   return NextResponse.json({ mandate, status: "pending" }, { status: 201 });
 }
