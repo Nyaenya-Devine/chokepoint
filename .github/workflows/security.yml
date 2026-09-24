@@ -78,7 +78,7 @@ jobs:
       - run: |
           set -eu
           grep -q "X-Frame-Options" next.config.mjs
-          grep -q "Content-Security-Policy" next.config.mjs
+          grep -q "Content-Security-Policy" src/proxy.ts
           grep -q "Strict-Transport-Security" next.config.mjs
           grep -q "Permissions-Policy" next.config.mjs
 
