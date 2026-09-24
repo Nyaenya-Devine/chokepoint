@@ -6,7 +6,7 @@ import {
   ScrollText,
   Activity,
   KeyRound,
-  Github,
+  GitBranch,
   Gauge,
   FileCheck,
   Beaker,
@@ -59,7 +59,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <ScrollText size={17} /> Security write-up
           </a>
           <a href="/architecture.svg" target="_blank" className="nav-item" rel="noreferrer">
-            <Github size={17} /> Architecture diagram
+            <GitBranch size={17} /> Architecture diagram
           </a>
         </nav>
 
