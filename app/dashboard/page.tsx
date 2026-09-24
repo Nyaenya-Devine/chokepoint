@@ -1,7 +1,7 @@
 /**
- * Dashboard v3.0 — World-class expert security product
+ * Dashboard v3.0 — Security engineering security product
  * Pure focus: dual-control mandates, risk engine, ledger verification, policy center, approvers
- * No OrbitDesk mixing: no tenants NovaTech/Bloom/Apex, no operators 44h/week, no endless M365
+ * Product boundary: privileged-action authorization and audit.
  */
 
 'use client';
@@ -31,12 +31,12 @@ export default function DashboardV3() {
             <span className="h-4 w-px bg-white/10" />
             <div className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[11px] font-mono tracking-[0.08em] text-white/40 uppercase">Tamper-evident • Dual-control • HMAC-signed • 26 tests</span>
+              <span className="text-[11px] font-mono tracking-[0.08em] text-white/40 uppercase">Tamper-evident • Dual-control • HMAC-signed • automated tests</span>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
-            <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06] font-mono">v3.0 • Pure security • No mixing</span>
+            <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06] font-mono">v3.0 • Privileged-action controls</span>
             <span className="text-[11px] px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">0 vulns</span>
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function DashboardV3() {
       </div>
 
       <footer className="border-t border-white/[0.06] mt-8 py-4 px-4">
-        <p className="text-[11px] text-white/20 font-mono text-center">Chokepoint v3.0 • World-class expert • Pure security • No OrbitDesk mixing • Dual-control 4-eyes • Hash-chained HMAC-signed • 26 tests proving properties • OWASP ASI03 • Built by Devine Nyaenya</p>
+        <p className="text-[11px] text-white/20 font-mono text-center">Chokepoint v3.0 • Security engineering • Dual-control 4-eyes • Hash-chained HMAC-signed • tested security properties • OWASP ASI03 • Built by Devine Nyaenya</p>
       </footer>
     </div>
   );

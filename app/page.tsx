@@ -1,7 +1,7 @@
 /**
- * Chokepoint v3.0 — World-class expert security product
+ * Chokepoint v3.0 — Security engineering security product
  * Pure focus: least-privilege access control & tamper-evident audit for sensitive ops — humans and AI agents
- * No OrbitDesk mixing. No tenants NovaTech/Bloom/Apex. No operators 44h/week conflicts. No endless M365 requests.
+ * Product boundary: privileged-action authorization and audit.
  * Inspired by HashiCorp Vault + Snyk + Vanta + Linear — focused, confident, proof over claims
  */
 
@@ -86,7 +86,7 @@ const securityProperties = [
 export default function LandingV3() {
   return (
     <div className="min-h-screen bg-[#050507] text-zinc-100 selection:bg-amber-500/30 relative overflow-hidden">
-      {/* Control Plane Livery — Obsidian aurora amber violet, specific to Chokepoint, not basic black */}
+      {/* Control Plane Livery — Obsidian aurora amber violet, specific to Chokepoint, restrained dark palette */}
       <div className="pointer-events-none fixed inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:72px_72px]" />
         <div className="absolute top-[-20%] left-[5%] w-[900px] h-[700px] rounded-full blur-[120px] opacity-[0.14] bg-gradient-to-br from-amber-500 via-orange-500 to-red-500" />
@@ -118,7 +118,7 @@ export default function LandingV3() {
               {[
                 'Hash-chained',
                 'HMAC-signed',
-                '26 tests',
+                'automated tests',
                 '0 vulns',
               ].map(pill => (
                 <span key={pill} className="text-[10px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/50 border border-white/[0.08] font-mono">
@@ -134,7 +134,7 @@ export default function LandingV3() {
       </div>
 
       <main className="relative z-10 mx-auto max-w-[1280px] px-6 md:px-10 py-12 md:py-20">
-        {/* Hero — world-class expert, focused, not trying everything */}
+        {/* Hero — focused security product */}
         <div className="max-w-[900px]">
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/[0.08] px-3.5 py-1.5 mb-8">
             <Fingerprint className="h-3.5 w-3.5 text-amber-400" />
@@ -153,7 +153,7 @@ export default function LandingV3() {
 
           <p className="mt-8 text-[16px] leading-[1.7] text-white/50 max-w-[62ch] font-[400]">
             Chokepoint answers one question: how do you let people — and increasingly, AI agents — perform high-impact actions without giving anyone enough authority to abuse it? 
-            <span className="text-white/80"> Role-based auth, working two-person approval, SHA-256 hash-chained HMAC-signed audit log, anomaly detection.</span> No real tenant data. No hardcoded secrets. 26 tests that prove the security properties, not toy smoke tests.
+            <span className="text-white/80"> Role-based auth, working two-person approval, SHA-256 hash-chained HMAC-signed audit log, anomaly detection.</span> No real tenant data. No hardcoded secrets. automated tests that prove the security properties, not toy smoke tests.
           </p>
 
           <div className="mt-10 flex flex-wrap gap-3 items-center">
@@ -165,7 +165,7 @@ export default function LandingV3() {
             </Link>
             <div className="flex items-center gap-2 text-[12px] text-white/40 ml-2 font-mono">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Live • HMAC-signed • Hash-chained • 26 tests pass • 0 vulns
+              Live • HMAC-signed • Hash-chained • automated tests pass • 0 vulns
             </div>
           </div>
 
@@ -224,7 +224,7 @@ export default function LandingV3() {
               ))}
             </div>
             <div className="mt-4 flex gap-2">
-              <span className="text-[11px] px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">26 tests pass</span>
+              <span className="text-[11px] px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">automated tests pass</span>
               <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06]">0 vulns • npm audit</span>
               <span className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06]">Next 16.3.5 • React 19.2.8</span>
             </div>
@@ -371,7 +371,7 @@ export default function LandingV3() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[11px] text-white/30 font-mono">
             <div className="space-y-1">
               <p><span className="text-white/60">Chokepoint v3.0</span> — Least-privilege access control & tamper-evident audit for sensitive ops — humans and AI agents. Educational simulation, HMAC-signed ledger, hash-chained, dual-control 4-eyes, OWASP ASI03.</p>
-              <p>Built by Devine Nyaenya • World-class expert standard • Focused, not trying everything • Proof over claims • 26 tests • 0 vulns • Next 16.3.5</p>
+              <p>Built by Devine Nyaenya • Production-minded engineering • Focused control scope • Proof over claims • automated tests • 0 vulns • Next 16.3.5</p>
             </div>
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <Link href="/dashboard" className="hover:text-white/60 transition">Dashboard →</Link>
@@ -383,7 +383,7 @@ export default function LandingV3() {
           </div>
           <div className="mt-4 pt-4 border-t border-white/[0.04] flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-[10px] text-white/20 font-mono">
             <span>Security: PBKDF2/Argon2id + salt, HMAC compare_digest, role whitelist, TTL CSRF IP rate limiting, html.escape, CSP self-only, HSTS 63072000, no secrets, no real tenant</span>
-            <span>v3.0 • Pure security • No OrbitDesk mixing • HashiCorp Vault + Snyk + Vanta + Linear inspiration • Human premium</span>
+            <span>v3.0 • HashiCorp Vault + Snyk + Vanta + Linear inspiration • Operational security interface</span>
           </div>
         </div>
       </footer>

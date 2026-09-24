@@ -20,7 +20,7 @@ export default async function FleetRiskPage() {
         <div>
           <h1 className="page-title">Fleet Risk — Behavioral Scoring</h1>
           <p className="page-sub">
-            God Mode: agent risk profiles from audit chain, anomaly engine, and policy simulator. No fabrication — scores derived from real ledger.
+            Advanced controls: agent risk profiles from audit chain, anomaly engine, and policy simulator. Scores are derived from the current ledger.
           </p>
         </div>
         <span className="badge badge-ok">live ledger</span>

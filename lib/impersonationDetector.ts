@@ -1,5 +1,5 @@
 /**
- * Chokepoint - Agent Impersonation Detection (God Mode)
+ * Chokepoint - Agent Impersonation Detection (advanced controls)
  * Detects when AI agents try to impersonate humans or escalate beyond role
  * OWASP Agentic AI Top 10 - ASI03: Identity & Privilege Abuse
  */

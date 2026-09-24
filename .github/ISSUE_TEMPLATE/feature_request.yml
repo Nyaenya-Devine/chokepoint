@@ -1,5 +1,5 @@
 name: Feature Request — Chokepoint
-description: Request new lab capability — must be human, not AI-basic, inspired by top 20 sites
+description: Request new lab capability — focused on clear operational learning outcomes
 title: "[Feature] "
 labels: ["enhancement", "triage"]
 assignees: ["Nyaenya-Devine"]
@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Chokepoint aims for 100% real feel — not basic AI. Propose features that teach beginner MSP workflow like real helpdesk, with modern appearance.
+        Chokepoint aims for credible operational detail. Propose features that teach beginner MSP workflow like real helpdesk, with modern appearance.
 
   - type: textarea
     id: problem
@@ -28,7 +28,7 @@ body:
   - type: dropdown
     id: inspiration
     attributes:
-      label: Inspiration — Top 20 sites combined
+      label: Relevant products or standards
       options:
         - LinkedIn (messaging dock)
         - Linear (clean, modern)

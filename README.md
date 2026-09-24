@@ -62,6 +62,17 @@ CHOKEPOINT_VIEWER_PASSWORD=<unique password>
 
 Never commit real values. Production startup fails closed when required secrets are absent or too weak.
 
+
+## 📱 Android TWA install check
+
+Issue tracker: [#18](https://github.com/Nyaenya-Devine/chokepoint/issues/18)
+
+Live Asset Links: [`/.well-known/assetlinks.json`](https://chokepoint-demo.vercel.app/.well-known/assetlinks.json) on the demo host returns HTTP 200 for package `com.chokepoint.security.twa`, but the cert fingerprint is still the placeholder `REPLACE_WITH_YOUR_KEYSTORE_SHA256`, so a verified TWA install cannot succeed until a real keystore fingerprint is published.
+
+![Asset Links evidence](docs/assets/twa-assetlinks-check.svg)
+
+Full notes and Android device steps: [docs/twa-android-install.md](docs/twa-android-install.md).
+
 ## 🧪 Tests
 
 ```bash

@@ -21,7 +21,7 @@ export default async function TimeTravelPage() {
       <div className="topbar">
         <div>
           <h1 className="page-title">Time-Travel Audit Viewer</h1>
-          <p className="page-sub">God Mode: slide through history, replay chain state at any index, verify tamper-evidence retroactively.</p>
+          <p className="page-sub">Advanced controls: slide through history, replay chain state at any index, verify tamper-evidence retroactively.</p>
         </div>
         <span className="badge badge-ok">{entries.length} entries</span>
       </div>

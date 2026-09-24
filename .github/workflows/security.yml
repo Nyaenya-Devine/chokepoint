@@ -18,7 +18,7 @@ jobs:
     name: CodeQL — SAST
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: github/codeql-action/init@v4
         with:
           languages: javascript, typescript
@@ -33,8 +33,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/dependency-review-action@v4
+      - uses: actions/checkout@v7
+      - uses: actions/dependency-review-action@v5
         with:
           fail-on-severity: high
           allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, 0BSD
@@ -43,7 +43,7 @@ jobs:
     name: Secret Scan — TruffleHog + Grep
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: trufflesecurity/trufflehog@main
@@ -59,8 +59,8 @@ jobs:
     name: npm Audit — CVEs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: 'npm'
@@ -74,11 +74,11 @@ jobs:
     name: Security Headers — CSP, HSTS
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: |
           set -eu
           grep -q "X-Frame-Options" next.config.mjs
-          grep -q "Content-Security-Policy" next.config.mjs
+          grep -q "Content-Security-Policy" src/proxy.ts
           grep -q "Strict-Transport-Security" next.config.mjs
           grep -q "Permissions-Policy" next.config.mjs
 
@@ -86,7 +86,7 @@ jobs:
     name: Electron Hardening — Zero-Trust
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: |
           set -eu
           grep -q "contextIsolation: true" electron.js

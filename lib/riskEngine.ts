@@ -1,5 +1,5 @@
 /**
- * Chokepoint - Advanced Agent Risk Scoring Engine (God Mode)
+ * Chokepoint - Advanced Agent Risk Scoring Engine (advanced controls)
  * 
  * Beyond basic anomaly detection, this engine computes behavioral risk
  * for humans AND AI agents using velocity, privilege creep, impersonation,

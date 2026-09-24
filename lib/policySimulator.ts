@@ -1,5 +1,5 @@
 /**
- * Chokepoint - Policy Simulation Playground (God Mode)
+ * Chokepoint - Policy Simulation Playground (advanced controls)
  * Dry-run mode: test policies against historical ledger without committing
  */
 

@@ -1,4 +1,4 @@
-/* Obsidian Aurora Editorial — Chokepoint v5.2 Full Body Upgrade — Control Plane Livery */
+/* Obsidian Aurora Editorial — Chokepoint v5.2 Interface foundation — Control Plane Livery */
 :root {
   --bg: #050507;
   --bg-2: #0E0E11;
@@ -46,7 +46,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Livery Background — Control Plane — Good Nasty Work */
+/* Livery Background — Control Plane — Security engineering */
 body::before {
   content: "";
   position: fixed;

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420">
+  <rect width="900" height="420" fill="#121218"/>
+  <text x="24" y="36" fill="#8cb4ff" font-family="monospace" font-size="16">chokepoint-demo.vercel.app/.well-known/assetlinks.json — HTTP 200</text>
+  <text x="24" y="70" fill="#dce6f0" font-family="monospace" font-size="14">[</text>
+  <text x="24" y="94" fill="#dce6f0" font-family="monospace" font-size="14">  {</text>
+  <text x="24" y="118" fill="#dce6f0" font-family="monospace" font-size="14">    "relation": ["delegate_permission/common.handle_all_urls"],</text>
+  <text x="24" y="142" fill="#dce6f0" font-family="monospace" font-size="14">    "target": {</text>
+  <text x="24" y="166" fill="#dce6f0" font-family="monospace" font-size="14">      "namespace": "android_app",</text>
+  <text x="24" y="190" fill="#dce6f0" font-family="monospace" font-size="14">      "package_name": "com.chokepoint.security.twa",</text>
+  <text x="24" y="214" fill="#ffb4b4" font-family="monospace" font-size="14">      "sha256_cert_fingerprints": ["REPLACE_WITH_YOUR_KEYSTORE_SHA256"]</text>
+  <text x="24" y="238" fill="#dce6f0" font-family="monospace" font-size="14">    }</text>
+  <text x="24" y="262" fill="#dce6f0" font-family="monospace" font-size="14">  }</text>
+  <text x="24" y="286" fill="#dce6f0" font-family="monospace" font-size="14">]</text>
+  <text x="24" y="330" fill="#9ad67a" font-family="monospace" font-size="14">Finding: placeholder fingerprint blocks verified TWA linking until replaced.</text>
+  <text x="24" y="360" fill="#8cb4ff" font-family="monospace" font-size="14">Evidence for Nyaenya-Devine/chokepoint#18 — 2026-09-16 Europe/Budapest</text>
+</svg>

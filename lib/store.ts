@@ -8,7 +8,8 @@ import { hashPassword, randomToken, randomUUIDv4 } from "./crypto";
 import { appendEntry, verifyChain, type LedgerEntry } from "./ledger";
 import { assessLedger } from "./anomaly";
 import type { AppState, Mandate, PublicUser, User } from "./types";
-import type { Role } from "./authz";
+import type { Action, Role } from "./authz";
+import { mandateFingerprint, type BlastRadius, type MandateEnvironment } from "./mandatePolicy";
 
 function requiredLedgerSecret(): string {
   const secret = process.env.CHOKEPOINT_SECRET;
@@ -71,7 +72,26 @@ class Store {
     for (const e of seedEvents()) { const entry = appendEntry(prev, { ...e, id: randomUUIDv4() }, LEDGER_SECRET); this.ledger.push(entry); prev = entry; }
     this.mandates = pendingMandate;
   }
-  private seedMandates(): Mandate[] { return [{ id: randomUUIDv4(), action: "grant_role", target: "operator", requestedBy: "u-op", approverId: null, state: "pending", createdAt: hoursAgo(0.2), expiresAt: new Date(Date.now() + 15 * 60_000).toISOString(), reason: "Escalate operator to admin for incident response window." }]; }
+  private seedMandates(): Mandate[] {
+    const context = {
+      action: "grant_role" as const,
+      target: "operator",
+      requestedBy: "u-op",
+      createdAt: hoursAgo(0.2),
+      expiresAt: new Date(Date.now() + 15 * 60_000).toISOString(),
+      purpose: "Restore incident-response administration during a bounded response window.",
+      environment: "production" as const,
+      blastRadius: "single-resource" as const,
+    };
+    return [{
+      id: randomUUIDv4(),
+      ...context,
+      approverId: null,
+      state: "pending",
+      reason: "Escalate operator to admin for incident response window.",
+      contextFingerprint: mandateFingerprint(context),
+    }];
+  }
   getUserByUsername(username: string): User | undefined { return this.users.find((u) => u.username === username); }
   getUserById(id: string): User | undefined { return this.users.find((u) => u.id === id); }
   toPublic(u: User): PublicUser { const { passwordHash: _drop, ...pub } = u; return pub; }
@@ -82,7 +102,37 @@ class Store {
   risks() { return assessLedger(this.ledger).reverse(); }
   riskSummary() { const risks = this.risks(); const counts: Record<string, number> = {}; for (const r of risks) counts[r.severity] = (counts[r.severity] ?? 0) + 1; return { total: risks.length, critical: counts.CRITICAL ?? 0, high: counts.HIGH ?? 0, medium: counts.MEDIUM ?? 0, low: counts.LOW ?? 0, riskIndex: Math.round((risks.reduce((s, r) => s + r.score, 0) / Math.max(1, risks.length)) * 100) }; }
   dashboard() { const ordered = [...this.ledger].sort((a, b) => a.index - b.index); const risks = assessLedger(this.ledger); const trend = risks.map((r) => ({ index: r.entryIndex, score: r.score, severity: r.severity })); const actions: Record<string, number> = {}; for (const e of ordered) { const key = actionCategory(e.action); actions[key] = (actions[key] ?? 0) + 1; } const actionBreakdown = Object.entries(actions).map(([label, count]) => ({ label, count })).sort((a, b) => b.count - a.count); const buckets = 6; const bucketMs = 10 * 60_000; const now = Date.now(); const activity: { label: string; count: number; risky: number }[] = []; for (let i = buckets - 1; i >= 0; i--) { const start = now - (i + 1) * bucketMs; const end = start + bucketMs; let count = 0; let risky = 0; for (const e of ordered) { const t = new Date(e.ts).getTime(); if (t >= start && t < end) { count++; if (/login_failed|grant_role|rotate_secret|revoke|delete|elevate/.test(e.action)) risky++; } } activity.push({ label: `${-i * 10}m`, count, risky }); } const topAlerts = this.risks().filter((r) => r.severity === "CRITICAL" || r.severity === "HIGH" || r.severity === "MEDIUM").slice(0, 6); return { trend, actionBreakdown, activity, topAlerts, totals: { events: ordered.length, logins: actionBreakdown.find((a) => a.label === "Auth")?.count ?? 0, privileged: actionBreakdown.filter((a) => ["Privilege", "Dual-control"].includes(a.label)).reduce((s, a) => s + a.count, 0) } }; }
-  createMandate(params: { action: string; target: string; requestedBy: string; reason: string; }): Mandate { const mandate: Mandate = { id: randomUUIDv4(), action: params.action, target: params.target, requestedBy: params.requestedBy, approverId: null, state: "pending", createdAt: new Date().toISOString(), expiresAt: new Date(Date.now() + 15 * 60_000).toISOString(), reason: params.reason }; this.mandates.unshift(mandate); return mandate; }
+  createMandate(params: {
+    action: Action;
+    target: string;
+    requestedBy: string;
+    reason: string;
+    purpose: string;
+    environment: MandateEnvironment;
+    blastRadius: BlastRadius;
+    ttlMinutes: number;
+  }): Mandate {
+    const context = {
+      action: params.action,
+      target: params.target,
+      requestedBy: params.requestedBy,
+      purpose: params.purpose,
+      environment: params.environment,
+      blastRadius: params.blastRadius,
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + params.ttlMinutes * 60_000).toISOString(),
+    };
+    const mandate: Mandate = {
+      id: randomUUIDv4(),
+      ...context,
+      approverId: null,
+      state: "pending",
+      reason: params.reason,
+      contextFingerprint: mandateFingerprint(context),
+    };
+    this.mandates.unshift(mandate);
+    return mandate;
+  }
   decideMandate(id: string, approverId: string, decision: "approved" | "rejected"): Mandate | undefined { const m = this.mandates.find((x) => x.id === id); if (m) { m.state = decision; m.approverId = approverId; } return m; }
   createSession(userId: string): { token: string; expiresAt: string } { const token = randomToken(); return { token, expiresAt: new Date(Date.now() + 60 * 60_000).toISOString() }; }
   reset(): void { this.initialized = false; this.users = []; this.ledger = []; this.mandates = []; this.init(); }

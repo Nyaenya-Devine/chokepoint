@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://chokepoint-demo.vercel.app"),
   title: "Chokepoint v3.0 — Least-privilege & Tamper-evident Audit for Sensitive Ops — Humans and AI Agents",
   description:
-    "World-class expert: dual-control 4-eyes distinct approver, SHA-256 hash-chained HMAC-SHA256 + Merkle ledger, anomaly detection explainable, RBAC least privilege, policy simulator dry-run, SIEM JSON/CEF/OCSF/LEEF, compliance NIST/OWASP ASI03/SOC2/MITRE/ISO27001, risk engine 0-100, 26 tests proving security properties. OWASP Agentic AI ASI03. Pure security, no OrbitDesk mixing.",
+    "Security engineering: dual-control 4-eyes distinct approver, SHA-256 hash-chained HMAC-SHA256 + Merkle ledger, anomaly detection explainable, RBAC least privilege, policy simulator dry-run, SIEM JSON/CEF/OCSF/LEEF, compliance NIST/OWASP ASI03/SOC2/MITRE/ISO27001, risk engine 0-100, automated tests proving security properties. OWASP Agentic AI ASI03. Focused security product.",
   applicationName: "Chokepoint",
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
@@ -16,9 +16,9 @@ export const metadata: Metadata = {
     apple: "/icon.svg",
   },
   openGraph: {
-    title: "Chokepoint v3.0 — Pure Security Expert — Dual-control, Hash-chained, HMAC-signed",
+    title: "Chokepoint v3.0 — Dual control and tamper-evident audit",
     description:
-      "Least-privilege access control & tamper-evident audit for sensitive ops — humans and AI agents. Dual-control 4-eyes, hash-chained HMAC-signed ledger, anomaly detection, RBAC, 26 tests proving properties. OWASP ASI03.",
+      "Least-privilege access control & tamper-evident audit for sensitive ops — humans and AI agents. Dual-control 4-eyes, hash-chained HMAC-signed ledger, anomaly detection, RBAC, tested security properties. OWASP ASI03.",
     type: "website",
   },
 };

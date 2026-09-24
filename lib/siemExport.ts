@@ -1,5 +1,5 @@
 /**
- * Chokepoint - SIEM Export (God Mode)
+ * Chokepoint - SIEM Export (advanced controls)
  * Export audit logs as JSON, CEF, OCSF formats for Splunk, QRadar, Sentinel
  */
 

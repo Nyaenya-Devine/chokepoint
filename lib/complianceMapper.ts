@@ -1,5 +1,5 @@
 /**
- * Chokepoint - Compliance Mapper (God Mode)
+ * Chokepoint - Compliance Mapper (advanced controls)
  * Auto-maps audit events to OWASP, NIST, SOC2, MITRE ATT&CK
  */
 

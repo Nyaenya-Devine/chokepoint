@@ -19,7 +19,7 @@ export default async function CompliancePage() {
       <div className="topbar">
         <div>
           <h1 className="page-title">Compliance Mapping</h1>
-          <p className="page-sub">God Mode: maps Chokepoint controls to SOC2, ISO27001, NIST 800-53. Exportable for auditors.</p>
+          <p className="page-sub">Advanced controls: maps Chokepoint controls to SOC2, ISO27001, NIST 800-53. Exportable for auditors.</p>
         </div>
         <span className="badge badge-role">{user.role}</span>
       </div>

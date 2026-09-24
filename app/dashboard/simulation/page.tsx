@@ -19,7 +19,7 @@ export default async function SimulationPage() {
       <div className="topbar">
         <div>
           <h1 className="page-title">Simulation Playground</h1>
-          <p className="page-sub">God Mode: test policy changes without touching prod, plus impersonation attack simulation.</p>
+          <p className="page-sub">Advanced controls: test policy changes without touching prod, plus impersonation attack simulation.</p>
         </div>
         <span className="badge badge-risk-medium">simulation only</span>
       </div>
