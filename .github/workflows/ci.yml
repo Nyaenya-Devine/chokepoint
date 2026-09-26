@@ -31,7 +31,10 @@ jobs:
       - name: TypeScript Check
         run: npx tsc --noEmit --skipLibCheck
       - name: Next Build
-        run: npm run build
+        run: |
+          set -eu
+          export CHOKEPOINT_SECRET="$(openssl rand -hex 32)"
+          npm run build
         env:
           NODE_ENV: production
       - name: Check for leaked secrets
