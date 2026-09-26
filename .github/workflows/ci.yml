@@ -34,6 +34,7 @@ jobs:
         run: |
           set -eu
           export CHOKEPOINT_SECRET="$(openssl rand -hex 32)"
+          export CHOKEPOINT_ADMIN_PASSWORD="$(openssl rand -hex 24)"
           npm run build
         env:
           NODE_ENV: production
