@@ -1,32 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { LogIn, ShieldCheck, ArrowLeft } from "lucide-react";
 
-const DEMO = [
-  { u: "admin", p: "admin1234" },
-  { u: "operator", p: "operator1234" },
-  { u: "auditor", p: "auditor1234" },
-  { u: "viewer", p: "viewer1234" },
-];
+const DEMO = ["admin", "operator", "auditor", "viewer"] as const;
 
 export default function LoginForm() {
   const params = useSearchParams();
-  const [username, setUsername] = useState("");
+  const router = useRouter();
+  const [username, setUsername] = useState(() => params.get("user") ?? "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    const u = params.get("user");
-    if (u) {
-      setUsername(u);
-      const hit = DEMO.find((d) => d.u === u);
-      if (hit) setPassword(hit.p);
-    }
-  }, [params]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -45,7 +32,26 @@ export default function LoginForm() {
     }
     // Full navigation ensures the freshly-set session cookie is sent to the
     // server when the dashboard renders (client-side RSC push could race it).
-    window.location.href = "/dashboard";
+    router.push("/dashboard");
+    router.refresh();
+  }
+
+  async function openDemo(role: string) {
+    setBusy(true);
+    setError("");
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: role, demo: true }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      setBusy(false);
+      setError(data.error ?? "Demo account is unavailable.");
+      return;
+    }
+    router.push("/dashboard");
+    router.refresh();
   }
 
   return (
@@ -96,21 +102,22 @@ export default function LoginForm() {
           <div className="mt-16">
             <div className="meta-cell mb-8">One-click demo accounts:</div>
             <div className="row">
-              {DEMO.map((d) => (
+              {DEMO.map((role) => (
                 <button
-                  key={d.u}
+                  key={role}
                   type="button"
                   className="btn btn-sm btn-ghost"
-                  onClick={() => { setUsername(d.u); setPassword(d.p); }}
+                  disabled={busy}
+                  onClick={() => void openDemo(role)}
                 >
-                  {d.u}
+                  {role}
                 </button>
               ))}
             </div>
           </div>
         </div>
         <div className="meta-cell" style={{ textAlign: "center", marginTop: 16 }}>
-          Credentials are seeded in-memory; this is a live demonstration.
+Demo sessions use in-memory data and reset when the deployment restarts.
         </div>
       </div>
     </div>

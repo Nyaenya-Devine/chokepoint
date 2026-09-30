@@ -10,7 +10,7 @@ function requestIp(req: Request): string {
 }
 
 export async function POST(req: Request) {
-  let body: { username?: string; password?: string };
+  let body: { username?: string; password?: string; demo?: boolean };
   try {
     body = await req.json();
   } catch {
@@ -19,8 +19,8 @@ export async function POST(req: Request) {
 
   const username = typeof body.username === "string" ? body.username.trim().toLowerCase() : "";
   const password = typeof body.password === "string" ? body.password : "";
-  if (!username || !password || username.length > 100 || password.length > 1000) {
-    return NextResponse.json({ error: "Username and password are required." }, { status: 400 });
+  if (!username || username.length > 100 || password.length > 1000) {
+    return NextResponse.json({ error: "Username is required." }, { status: 400 });
   }
 
   const ip = requestIp(req);
@@ -35,7 +35,16 @@ export async function POST(req: Request) {
   }
 
   const user = store.getUserByUsername(username);
-  if (!user || !verifyPassword(password, user.passwordHash)) {
+  if (body.demo === true && process.env.CHOKEPOINT_PUBLIC_DEMO === "true") {
+    if (!user || !user.active) {
+      return NextResponse.json({ error: "Demo account is unavailable." }, { status: 404 });
+    }
+    await setSessionCookie(user.id);
+    store.append({ actor: user.username, actorRole: user.role, action: "login", target: "session", meta: { method: "public_demo", ok: true, ip } });
+    return NextResponse.json({ ok: true, user: store.toPublic(user) }, { headers: { "Cache-Control": "no-store" } });
+  }
+
+  if (!password || !user || !verifyPassword(password, user.passwordHash)) {
     store.append({
       actor: username || "unknown",
       actorRole: "viewer",

@@ -334,10 +334,10 @@ export default function LandingV3() {
           <p className="text-[12px] text-white/40 mb-4">Least-privilege: each role sees only what policy allows. Requester cannot approve own. Proof over claims.</p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
             {[
-              { username: 'admin', password: 'admin1234', role: 'Admin', desc: 'Approves critical, full policy control, Break Glass', color: 'amber' },
-              { username: 'operator', password: 'operator1234', role: 'Operator', desc: 'Creates requests, runs scans, requests agent actions', color: 'violet' },
-              { username: 'auditor', password: 'auditor1234', role: 'Auditor', desc: 'Verifies integrity, exports SIEM, compliance mapping', color: 'cyan' },
-              { username: 'viewer', password: 'viewer1234', role: 'Viewer', desc: 'Read-only dashboard, risk index, anomaly feed', color: 'neutral' },
+              { username: 'admin', role: 'Admin', desc: 'Approves critical actions and manages policy', color: 'amber' },
+              { username: 'operator', role: 'Operator', desc: 'Creates requests and runs bounded actions', color: 'violet' },
+              { username: 'auditor', role: 'Auditor', desc: 'Verifies integrity and exports audit evidence', color: 'cyan' },
+              { username: 'viewer', role: 'Viewer', desc: 'Reads dashboards, risk signals and anomaly history', color: 'neutral' },
             ].map(u => (
               <Link key={u.username} href={`/login?user=${u.username}`} className="group p-4 rounded-[14px] border border-white/[0.06] bg-[#08080A] hover:border-white/[0.12] hover:bg-[#0F0F11] transition-all hover:-translate-y-0.5">
                 <div className="flex items-center justify-between">
@@ -346,7 +346,7 @@ export default function LandingV3() {
                 </div>
                 <p className="mt-3 font-mono text-[13px] font-medium text-[#F5F3EF]">{u.username}</p>
                 <p className="text-[11px] text-white/40 mt-1 leading-[1.4]">{u.desc}</p>
-                <p className="text-[10px] font-mono text-white/20 mt-2">Pass: {u.password}</p>
+                <p className="text-[10px] font-mono text-white/20 mt-2">Open role demo →</p>
               </Link>
             ))}
           </div>
