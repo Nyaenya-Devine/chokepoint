@@ -38,7 +38,7 @@
     "@types/node": "^26.6.2",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "concurrently": "^10.0.5",
+    "concurrently": "^10.0.6",
     "electron": "^44.5.1",
     "electron-builder": "^26.0.12",
     "eslint": "9.39.5",
