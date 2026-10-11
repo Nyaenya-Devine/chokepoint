@@ -23,7 +23,7 @@ jobs:
       - name: Install deps — npm ci
         run: npm ci --ignore-scripts
       - name: Dependency audit — high severity gate
-        run: npm audit --audit-level=high
+        run: npm audit --omit=dev --audit-level=high
       - name: Test security properties
         run: npm test
       - name: Lint

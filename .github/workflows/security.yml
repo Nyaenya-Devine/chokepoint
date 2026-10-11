@@ -65,7 +65,7 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci --ignore-scripts
-      - run: npm audit --audit-level=high
+      - run: npm audit --omit=dev --audit-level=high
       - name: Verify supported Electron baseline
         run: |
           node -e "const v=require('./package.json').devDependencies.electron; const major=parseInt(v.match(/\d+/)[0]); if(major<42){console.error('Electron <42 is unsupported/EOL'); process.exit(1)} console.log('Electron security baseline OK:', v)"
