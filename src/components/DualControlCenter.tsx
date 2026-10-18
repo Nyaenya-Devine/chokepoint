@@ -62,9 +62,9 @@ export function DualControlCenter() {
             <p className="text-[11px] font-semibold text-zinc-300">Verification workflow</p>
             <p className="text-[11px] text-zinc-500 mt-1 leading-[1.4]">For critical requests, second approver verifies intent through secure channel before authorization. Focused on security decision, not general support.</p>
             <div className="mt-2.5 space-y-2">
-              <div className="p-2 rounded-[8px] bg-violet-500/5 border border-violet-500/10"><p className="text-[11px] text-violet-300">Approver: "Confirming {selected.code} — host isolation for IR-2024-112. What is the affected asset?"</p></div>
-              <div className="p-2 rounded-[8px] bg-zinc-800 border border-zinc-700"><p className="text-[11px] text-zinc-300">Requester: "Host 10.0.1.45 shows anomalous activity. Requesting isolation per playbook, correlation a7f3c9e2."</p></div>
-              <div className="p-2 rounded-[8px] bg-emerald-500/5 border border-emerald-500/10"><p className="text-[11px] text-emerald-300">Approver: "Verified — approving with full audit trail."</p></div>
+              <div className="p-2 rounded-[8px] bg-violet-500/5 border border-violet-500/10"><p className="text-[11px] text-violet-300">Approver: &ldquo;Confirming {selected.code} — host isolation for IR-2024-112. What is the affected asset?&rdquo;</p></div>
+              <div className="p-2 rounded-[8px] bg-zinc-800 border border-zinc-700"><p className="text-[11px] text-zinc-300">Requester: &ldquo;Host 10.0.1.45 shows anomalous activity. Requesting isolation per playbook, correlation a7f3c9e2.&rdquo;</p></div>
+              <div className="p-2 rounded-[8px] bg-emerald-500/5 border border-emerald-500/10"><p className="text-[11px] text-emerald-300">Approver: &ldquo;Verified — approving with full audit trail.&rdquo;</p></div>
             </div>
           </div>
 

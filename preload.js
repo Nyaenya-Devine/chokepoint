@@ -40,4 +40,4 @@ contextBridge.exposeInMainWorld('chokepoint', {
   owasp: 'ASI03',
 });
 
-console.log('Chokepoint Desktop Bridge v3.1 loaded — Secure IPC, Auto-Update, Dual-Control, Tamper-Evident Ledger');
+// console.log('Chokepoint Desktop Bridge v3.1 loaded — Secure IPC, Auto-Update, Dual-Control, Tamper-Evident Ledger');

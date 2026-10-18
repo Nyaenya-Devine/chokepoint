@@ -31,13 +31,18 @@ const mockMandates: Mandate[] = [
 ];
 
 export function MandateQueue({ onSelect }: { onSelect?: (m: Mandate) => void }) {
-  const [mandates, setMandates] = useState<Mandate[]>(mockMandates);
   const [filter, setFilter] = useState<'all' | 'pending' | 'P1'>('all');
+  // A single ticking clock drives every countdown. Reading Date.now() during
+  // render is impure (react-hooks/purity), and the previous implementation
+  // re-created the mandate array every 5s just to force a re-render.
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    const interval = setInterval(() => setMandates(prev => [...prev]), 5000);
+    const interval = setInterval(() => setNow(Date.now()), 5000);
     return () => clearInterval(interval);
   }, []);
+
+  const mandates = mockMandates;
 
   const filtered = mandates.filter(m => {
     if (filter === 'pending' && m.status !== 'pending') return false;
@@ -64,7 +69,7 @@ export function MandateQueue({ onSelect }: { onSelect?: (m: Mandate) => void }) 
 
       <div className="flex-1 overflow-y-auto p-2 space-y-2">
         {filtered.map(m => {
-          const timeLeft = Math.max(0, m.expiresAt - Date.now());
+          const timeLeft = Math.max(0, m.expiresAt - now);
           const mins = Math.floor(timeLeft/60000);
           return (
             <button key={m.id} onClick={()=>onSelect?.(m)} className="w-full text-left p-3 rounded-[12px] bg-zinc-900 border border-zinc-800 hover:border-amber-500/20 hover:bg-zinc-800 transition">

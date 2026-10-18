@@ -15,3 +15,7 @@ docs/demo/*.wav
 node_modules
 out
 tsconfig.tsbuildinfo
+
+# Arena tooling metadata
+.arena-audit.json
+.arena-changes.json

@@ -24,21 +24,34 @@ export function RemoteVerification({ request }: Props) {
   const [logs, setLogs] = useState<string[]>([]);
   const [isConnected, setIsConnected] = useState(false);
 
+  const requestId = request?.id ?? null;
+
+  // Reset the session view when the request changes. React's documented
+  // "adjust state during render" pattern — doing this in an effect would
+  // cause an extra cascading render (react-hooks/set-state-in-effect).
+  const [activeRequestId, setActiveRequestId] = useState(requestId);
+  if (activeRequestId !== requestId) {
+    setActiveRequestId(requestId);
+    setSteps(verificationSteps);
+    setLogs([]);
+    setIsConnected(requestId !== null);
+  }
+
   useEffect(() => {
-    if (request) {
-      setIsConnected(true);
-      setLogs([`${new Date().toLocaleTimeString()} — Connected to verification service — Session ${request.id.substring(0,8)}`]);
-      const timer = setTimeout(() => {
-        setSteps(prev => prev.map(s => ({ ...s, status: 'verified' })));
-        setLogs(prev => [...prev, `${new Date().toLocaleTimeString()} — Identity verified — ${request.requestedByName} (${request.requestedBy})`, `${new Date().toLocaleTimeString()} — Risk: ${request.risk} — Policy: ${request.requiredApproverRole} — HMAC-signed`]);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else {
-      setIsConnected(false);
-      setSteps(verificationSteps);
-      setLogs([]);
-    }
-  }, [request?.id]);
+    if (!request) return;
+
+    const timer = setTimeout(() => {
+      setSteps(prev => prev.map(s => ({ ...s, status: 'verified' })));
+      setLogs(prev => [
+        ...prev,
+        `${new Date().toLocaleTimeString()} — Connected to verification service — Session ${request.id.substring(0, 8)}`,
+        `${new Date().toLocaleTimeString()} — Identity verified — ${request.requestedByName} (${request.requestedBy})`,
+        `${new Date().toLocaleTimeString()} — Risk: ${request.risk} — Policy: ${request.requiredApproverRole} — HMAC-signed`,
+      ]);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [request]);
 
   return (
     <div className="bg-[#0a0a0a] rounded-2xl border border-zinc-800/60 overflow-hidden flex flex-col h-[600px]">

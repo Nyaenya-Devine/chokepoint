@@ -25,27 +25,38 @@ export function VoiceApprovalCenter({ request, onApprove, onReject, onExecute }:
   const [isRecording, setIsRecording] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (request) {
-      setMessages([
-        {
-          id: '1',
-          speaker: 'requester',
-          name: request.requestedByName,
-          text: request.clientMessage,
-          timestamp: new Date().toISOString(),
-        },
-        {
-          id: '2',
-          speaker: 'system',
-          name: 'Chokepoint',
-          text: `Secure verification session ${request.id.substring(0, 8)} • HMAC-signed • Hash-chained • Recording enabled • ${request.risk} risk • Dual-control required`,
-          timestamp: new Date().toISOString(),
-        },
-      ]);
-      setStatus('idle');
-    }
-  }, [request?.id]);
+  const requestId = request?.id ?? null;
+
+  // Start a fresh transcript when the request changes. React's documented
+  // "adjust state during render" pattern — doing this in an effect would
+  // cause an extra cascading render (react-hooks/set-state-in-effect).
+  // Timestamps come from the request itself, so the transcript is a pure
+  // function of the request rather than of when the component mounted.
+  const [activeRequestId, setActiveRequestId] = useState(requestId);
+  if (activeRequestId !== requestId) {
+    setActiveRequestId(requestId);
+    setMessages(
+      request
+        ? [
+            {
+              id: '1',
+              speaker: 'requester',
+              name: request.requestedByName,
+              text: request.clientMessage,
+              timestamp: request.requestedAt,
+            },
+            {
+              id: '2',
+              speaker: 'system',
+              name: 'Chokepoint',
+              text: `Secure verification session ${request.id.substring(0, 8)} • HMAC-signed • Hash-chained • Recording enabled • ${request.risk} risk • Dual-control required`,
+              timestamp: request.requestedAt,
+            },
+          ]
+        : []
+    );
+    setStatus('idle');
+  }
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

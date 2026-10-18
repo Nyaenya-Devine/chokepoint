@@ -82,33 +82,39 @@ export function Donut({
   const cx = size / 2;
   const cy = size / 2;
   const circ = 2 * Math.PI * r;
-  let offset = 0;
+
+  // Precompute each segment's arc length and its cumulative offset.
+  // Done with a single reduce so no variable is mutated after render
+  // (react-hooks/immutability).
+  const segments = data.reduce<
+    { d: (typeof data)[number]; len: number; offset: number }[]
+  >((acc, d) => {
+    const len = (d.value / total) * circ;
+    const prev = acc[acc.length - 1];
+    const offset = prev ? prev.offset + prev.len : 0;
+    acc.push({ d, len, offset });
+    return acc;
+  }, []);
 
   return (
     <svg width={size} height={size} aria-hidden>
       <circle cx={cx} cy={cy} r={r} fill="none" stroke="#1f2a36" strokeWidth={thickness} />
-      {data.map((d) => {
-        const frac = d.value / total;
-        const len = frac * circ;
-        const el = (
-          <circle
-            key={d.label}
-            cx={cx}
-            cy={cy}
-            r={r}
-            fill="none"
-            stroke={d.color}
-            strokeWidth={thickness}
-            strokeDasharray={`${len} ${circ - len}`}
-            strokeDashoffset={-offset}
-            strokeLinecap="butt"
-            transform={`rotate(-90 ${cx} ${cy})`}
-            opacity={d.value > 0 ? 1 : 0}
-          />
-        );
-        offset += len;
-        return el;
-      })}
+      {segments.map(({ d, len, offset }) => (
+        <circle
+          key={d.label}
+          cx={cx}
+          cy={cy}
+          r={r}
+          fill="none"
+          stroke={d.color}
+          strokeWidth={thickness}
+          strokeDasharray={`${len} ${circ - len}`}
+          strokeDashoffset={-offset}
+          strokeLinecap="butt"
+          transform={`rotate(-90 ${cx} ${cy})`}
+          opacity={d.value > 0 ? 1 : 0}
+        />
+      ))}
       <text x={cx} y={cy - 4} textAnchor="middle" fontSize="30" fontWeight="700" fill="#e6edf3">
         {total}
       </text>
