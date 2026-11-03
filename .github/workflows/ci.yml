@@ -68,7 +68,7 @@ jobs:
           cache: 'npm'
       - run: npm ci --ignore-scripts
       - name: Generate SBOM
-        run: npx @cyclonedx/cyclonedx-npm --output-file sbom.json --output-format json
+        run: npx @cyclonedx/cyclonedx-npm --ignore-npm-errors --output-file sbom.json --output-format json
       - name: Upload SBOM artifact
         uses: actions/upload-artifact@v7
         with:
