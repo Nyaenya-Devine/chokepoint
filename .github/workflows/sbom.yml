@@ -26,8 +26,8 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Generate SBOM — JSON + XML
         run: |
-          npx @cyclonedx/cyclonedx-npm --output-file sbom.json --output-format json --spec-version 1.6
-          npx @cyclonedx/cyclonedx-npm --output-file sbom.xml --output-format xml --spec-version 1.6
+          npx @cyclonedx/cyclonedx-npm --ignore-npm-errors --output-file sbom.json --output-format json --spec-version 1.6
+          npx @cyclonedx/cyclonedx-npm --ignore-npm-errors --output-file sbom.xml --output-format xml --spec-version 1.6
           ls -lh sbom.*
       - name: Upload SBOM artifact
         uses: actions/upload-artifact@v7
