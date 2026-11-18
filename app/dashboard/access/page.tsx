@@ -38,7 +38,7 @@ export default async function AccessPage() {
 
       <div className="grid grid-2 mb-16">
         <div className="card">
-          <h3>Users</h3>
+          <h2>Users</h2>
           <p className="card-sub">{store.publicUsers().length} principals.</p>
           <div className="tbl-wrap" style={{ overflowX: "auto" }}>
             <table className="tbl">
@@ -60,7 +60,7 @@ export default async function AccessPage() {
         </div>
 
         <div className="card">
-          <h3>Dual-control (two-person rule)</h3>
+          <h2>Dual-control (two-person rule)</h2>
           <p className="card-sub">These actions require a distinct, authorized approver.</p>
           <div className="grid" style={{ gap: 8 }}>
             {[...DUAL_CONTROL_ACTIONS].map((a) => (
@@ -78,7 +78,7 @@ export default async function AccessPage() {
       </div>
 
       <div className="card mb-16">
-        <h3>Policy matrix</h3>
+        <h2>Policy matrix</h2>
         <p className="card-sub">Who can do what.</p>
         <div className="tbl-wrap" style={{ overflowX: "auto" }}>
           <table className="tbl">

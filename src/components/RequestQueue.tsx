@@ -88,7 +88,7 @@ export function RequestQueue({ onSelectRequest, selectedId }: Props) {
         </div>
 
         <div className="relative mb-3">
-          <input
+          <input aria-label="Search by code, requester, or operation..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by code, requester, or operation..."

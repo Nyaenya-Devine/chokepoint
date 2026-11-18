@@ -176,7 +176,7 @@ export function VoiceApprovalCenter({ request, onApprove, onReject, onExecute }:
         </div>
 
         <div className="flex gap-2">
-          <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleSend()} placeholder="Add verification note or question for requester..." className="flex-1 h-9 px-3 rounded-xl bg-zinc-800 border border-zinc-700 text-[13px] text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-violet-500/50" />
+          <input aria-label="Add verification note or question for requester..." value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleSend()} placeholder="Add verification note or question for requester..." className="flex-1 h-9 px-3 rounded-xl bg-zinc-800 border border-zinc-700 text-[13px] text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-violet-500/50" />
           <button onClick={handleSend} className="h-9 px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 text-[12px] font-medium">Send</button>
         </div>
 

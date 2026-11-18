@@ -42,7 +42,7 @@ export default async function RisksPage() {
 
       <div className="grid grid-2 mb-16">
         <div className="card">
-          <h3>Severity distribution</h3>
+          <h2>Severity distribution</h2>
           <p className="card-sub">Assessments across all {summary.total} events.</p>
           <div className="grid" style={{ gap: 12 }}>
             {counts.map((c) => (
@@ -58,7 +58,7 @@ export default async function RisksPage() {
         </div>
 
         <div className="card">
-          <h3>Detection rules</h3>
+          <h2>Detection rules</h2>
           <p className="card-sub">The signals the engine watches for.</p>
           <div className="grid" style={{ gap: 8 }}>
             {RULES.map((r) => (
@@ -77,7 +77,7 @@ export default async function RisksPage() {
       <div className="card">
         <div className="row mb-16" style={{ justifyContent: "space-between" }}>
           <div>
-            <h3 className="mb-0">Anomaly feed</h3>
+            <h2 className="mb-0">Anomaly feed</h2>
             <p className="card-sub mb-0">Newest assessment first.</p>
           </div>
           <span className="badge badge-ok">live</span>

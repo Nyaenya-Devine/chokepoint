@@ -71,24 +71,24 @@ export default function AccessConsole({
 
   return (
     <div>
-      <h3>Dual-control console</h3>
+      <h2>Dual-control console</h2>
       <p className="card-sub">Request a privileged change, then get it approved by a second user.</p>
 
       <div className="grid grid-2">
         <div>
           <div className="field">
-            <label>Action</label>
-            <select className="input" value={action} onChange={(e) => setAction(e.target.value)} disabled={!canRequest}>
+            <label htmlFor="f-action">Action</label>
+            <select id="f-action" className="input" value={action} onChange={(e) => setAction(e.target.value)} disabled={!canRequest}>
               {DUAL.map((a) => <option key={a} value={a}>{a}</option>)}
             </select>
           </div>
           <div className="field">
-            <label>Target</label>
-            <input className="input" value={target} onChange={(e) => setTarget(e.target.value)} disabled={!canRequest} />
+            <label htmlFor="f-target">Target</label>
+            <input id="f-target" className="input" value={target} onChange={(e) => setTarget(e.target.value)} disabled={!canRequest} />
           </div>
           <div className="field">
-            <label>Reason (audited)</label>
-            <textarea className="input" rows={2} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Justification for this change…" disabled={!canRequest} />
+            <label htmlFor="f-reason-audited">Reason (audited)</label>
+            <textarea id="f-reason-audited" className="input" rows={2} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Justification for this change…" disabled={!canRequest} />
           </div>
           <button className="btn btn-primary" onClick={request} disabled={busy || !canRequest}>
             <KeyRound size={15} /> Request mandate

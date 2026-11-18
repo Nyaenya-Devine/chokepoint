@@ -57,17 +57,17 @@ export default function ComplianceClient() {
     <div className="grid" style={{ gap: 16 }}>
       <div className="grid grid-3">
         <div className="card">
-          <div className="row mb-8"><ShieldCheck size={16}/><h3 className="mb-0">Reports</h3></div>
+          <div className="row mb-8"><ShieldCheck size={16}/><h2 className="mb-0">Reports</h2></div>
           <div className="kpi-value">{summary.total ?? reports.length}</div>
           <div className="kpi-delta">ledger entries mapped</div>
         </div>
         <div className="card">
-          <div className="row mb-8"><FileCheck size={16}/><h3 className="mb-0">Compliant</h3></div>
+          <div className="row mb-8"><FileCheck size={16}/><h2 className="mb-0">Compliant</h2></div>
           <div className="kpi-value">{summary.compliant ?? 0}</div>
           <div className="kpi-delta">no gaps</div>
         </div>
         <div className="card">
-          <div className="row mb-8"><AlertTriangle size={16}/><h3 className="mb-0">Gaps</h3></div>
+          <div className="row mb-8"><AlertTriangle size={16}/><h2 className="mb-0">Gaps</h2></div>
           <div className="kpi-value">{summary.criticalGaps ?? 0}</div>
           <div className="kpi-delta">needs justification</div>
         </div>
@@ -75,7 +75,7 @@ export default function ComplianceClient() {
 
       <div className="card">
         <div className="row mb-16" style={{ justifyContent: "space-between" }}>
-          <div><h3 className="mb-0">Control matrix</h3><p className="card-sub mb-0">OWASP ASI, NIST, SOC2, MITRE, ISO27001 — evidence from ledger</p></div>
+          <div><h2 className="mb-0">Control matrix</h2><p className="card-sub mb-0">OWASP ASI, NIST, SOC2, MITRE, ISO27001 — evidence from ledger</p></div>
           <span className="badge badge-ok">tamper-evident</span>
         </div>
         <div style={{ overflowX: "auto" }}>
@@ -99,7 +99,7 @@ export default function ComplianceClient() {
 
       {summary.frameworkCoverage && (
         <div className="card">
-          <h3>Framework coverage</h3>
+          <h2>Framework coverage</h2>
           <div className="grid" style={{ gap: 8, marginTop: 8 }}>
             {Object.entries(summary.frameworkCoverage).map(([fw, cnt]) => (
               <div key={fw} className="row" style={{ justifyContent: "space-between" }}><span className="mono">{fw}</span><span className="badge badge-role">{cnt as any} mappings</span></div>

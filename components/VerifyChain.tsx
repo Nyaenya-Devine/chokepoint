@@ -22,7 +22,7 @@ export default function VerifyChain({ username, role }: { username: string; role
   return (
     <div>
       <div className="row">
-        <h3 className="mb-0">Tamper-evidence verification</h3>
+        <h2 className="mb-0">Tamper-evidence verification</h2>
         <button className="btn btn-sm" onClick={verify} disabled={busy || !allowed}>
           {busy ? <RefreshCw size={14} className="spin" /> : <ShieldCheck size={14} />}
           {busy ? "Verifying…" : "Re-run full chain"}

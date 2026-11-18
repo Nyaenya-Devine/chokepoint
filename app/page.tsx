@@ -199,7 +199,7 @@ export default function LandingV3() {
                 </div>
                 <span className="text-[10px] px-2.5 py-1 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06] font-mono">{f.stats}</span>
               </div>
-              <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-[#F5F3EF]">{f.title}</h3>
+              <h2 className="text-[14px] font-semibold tracking-[-0.01em] text-[#F5F3EF]">{f.title}</h2>
               <p className="mt-2 text-[13px] leading-[1.6] text-white/50">{f.desc}</p>
               <div className="mt-3 p-2.5 rounded-[10px] bg-white/[0.03] border border-white/[0.06]">
                 <p className="text-[11px] font-mono text-white/30">Proof: <span className="text-white/60">{f.proof}</span></p>
@@ -211,10 +211,10 @@ export default function LandingV3() {
         {/* Proof over claims — tests that prove security properties */}
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-4">
           <div className="lg:col-span-7 rounded-[20px] border border-white/[0.06] bg-[#101012]/80 backdrop-blur p-6">
-            <h3 className="text-[14px] font-semibold flex items-center gap-2 mb-4">
+            <h2 className="text-[14px] font-semibold flex items-center gap-2 mb-4">
               <span className="h-6 w-6 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /></span>
               Tests that prove security properties — not toy smoke tests
-            </h3>
+            </h2>
             <div className="space-y-3">
               {securityProperties.map(item => (
                 <div key={item.test} className="flex gap-3 p-3 rounded-[12px] bg-[#08080A] border border-white/[0.06] hover:border-emerald-500/20 transition">
@@ -231,7 +231,7 @@ export default function LandingV3() {
           </div>
 
           <div className="lg:col-span-5 rounded-[20px] border border-amber-500/20 bg-gradient-to-br from-amber-500/[0.08] via-orange-500/[0.04] to-transparent backdrop-blur p-6">
-            <h3 className="text-[14px] font-semibold text-amber-200 mb-3 flex items-center gap-2"><ShieldAlert className="h-4 w-4" />Military-grade hardening — 10 upgrades</h3>
+            <h2 className="text-[14px] font-semibold text-amber-200 mb-3 flex items-center gap-2"><ShieldAlert className="h-4 w-4" />Military-grade hardening — 10 upgrades</h2>
             <div className="space-y-2.5 text-[12px] leading-[1.5] text-white/50">
               <p><span className="text-white/80 font-medium">1. Encrypted sessions & audit:</span> dual-control 4-eyes, hash-chained HMAC-SHA256 ledger, correlation ID tamper-evident</p>
               <p><span className="text-white/80 font-medium">2. RBAC & least privilege:</span> Viewer Operator Approver Admin, default-deny, separation of duties, TTL + CSRF</p>
@@ -253,7 +253,7 @@ export default function LandingV3() {
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-4">
           <div className="lg:col-span-5 rounded-[20px] border border-white/[0.06] bg-[#101012]/80 backdrop-blur overflow-hidden">
             <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
-              <h3 className="text-[13px] font-semibold flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />Live Mandates — Dual-control queue</h3>
+              <h2 className="text-[13px] font-semibold flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />Live Mandates — Dual-control queue</h2>
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/[0.04] text-white/40 border border-white/[0.06] font-mono">P1 • Critical • HMAC-signed</span>
             </div>
             <div className="p-3 space-y-2">
@@ -279,7 +279,7 @@ export default function LandingV3() {
 
           <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="rounded-[20px] border border-white/[0.06] bg-[#101012]/80 backdrop-blur p-5">
-              <h3 className="text-[13px] font-semibold flex items-center gap-2 mb-3"><Activity className="h-4 w-4 text-violet-400" />Risk Engine — 0-100 behavioral scoring</h3>
+              <h2 className="text-[13px] font-semibold flex items-center gap-2 mb-3"><Activity className="h-4 w-4 text-violet-400" />Risk Engine — 0-100 behavioral scoring</h2>
               <div className="space-y-3">
                 {[
                   { signal: 'Privilege creep', score: 78, reason: 'Operator escalated 3 times in 24h, unusual velocity' },
@@ -302,7 +302,7 @@ export default function LandingV3() {
             </div>
 
             <div className="rounded-[20px] border border-white/[0.06] bg-[#101012]/80 backdrop-blur p-5">
-              <h3 className="text-[13px] font-semibold flex items-center gap-2 mb-3"><Eye className="h-4 w-4 text-emerald-400" />Audit Ledger — Tamper-evident</h3>
+              <h2 className="text-[13px] font-semibold flex items-center gap-2 mb-3"><Eye className="h-4 w-4 text-emerald-400" />Audit Ledger — Tamper-evident</h2>
               <div className="space-y-2 font-mono text-[11px]">
                 {[
                   { hash: 'a7f3c9e2…', prev: 'b2e1d4f8…', action: 'REQUEST_CREATED', hmac: '✓', time: '14:22:03' },
@@ -330,7 +330,7 @@ export default function LandingV3() {
 
         {/* Demo accounts — focused, not 8 operators with conflicts */}
         <div className="mt-12 rounded-[20px] border border-white/[0.06] bg-[#101012]/80 backdrop-blur p-6">
-          <h3 className="text-[14px] font-semibold mb-1">Try it in 30 seconds — 4 demo accounts, no signup</h3>
+          <h2 className="text-[14px] font-semibold mb-1">Try it in 30 seconds — 4 demo accounts, no signup</h2>
           <p className="text-[12px] text-white/40 mb-4">Least-privilege: each role sees only what policy allows. Requester cannot approve own. Proof over claims.</p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
             {[
@@ -354,7 +354,7 @@ export default function LandingV3() {
 
         {/* Architecture — clean */}
         <div className="mt-12 rounded-[20px] border border-white/[0.06] bg-[#0a0a0a]/60 backdrop-blur p-6">
-          <h3 className="text-[13px] font-semibold mb-3 flex items-center gap-2"><Layers className="h-4 w-4 text-white/40" />Architecture — Clients → Policy engine → Dual-control → Ledger → Anomaly</h3>
+          <h2 className="text-[13px] font-semibold mb-3 flex items-center gap-2"><Layers className="h-4 w-4 text-white/40" />Architecture — Clients → Policy engine → Dual-control → Ledger → Anomaly</h2>
           <div className="font-mono text-[11px] text-white/30 leading-[1.6] bg-[#08080A] border border-white/[0.06] rounded-[12px] p-4 overflow-x-auto">
             <div>Clients (web / PWA / Capacitor)</div>
             <div className="pl-4 border-l border-white/[0.06] ml-2 mt-1">Next.js App Router → Session (HttpOnly, SameSite=Strict, signed cookie)</div>

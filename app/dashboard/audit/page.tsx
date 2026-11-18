@@ -35,7 +35,7 @@ export default async function AuditPage() {
       <div className="card">
         <div className="row mb-16" style={{ justifyContent: "space-between" }}>
           <div>
-            <h3 className="mb-0">Entries</h3>
+            <h2 className="mb-0">Entries</h2>
             <p className="card-sub mb-0">{entries.length} most recent · newest first</p>
           </div>
           <span className="badge badge-ok">append-only</span>

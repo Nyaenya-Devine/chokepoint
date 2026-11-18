@@ -28,10 +28,10 @@ export default function TimeTravelClient({ entries }: { entries: Entry[] }) {
     <div className="grid" style={{ gap: 16 }}>
       <div className="card">
         <div className="row mb-16" style={{ justifyContent: "space-between" }}>
-          <div><h3 className="mb-0">Timeline slider</h3><p className="card-sub mb-0">Drag to replay chain state — what the ledger looked like at that point</p></div>
+          <div><h2 className="mb-0">Timeline slider</h2><p className="card-sub mb-0">Drag to replay chain state — what the ledger looked like at that point</p></div>
           <span className="badge badge-role"><Clock size={12}/> index {cursor} / {maxIdx}</span>
         </div>
-        <input type="range" min={sorted[0]?.index ?? 0} max={maxIdx} value={cursor} onChange={(e) => setCursor(parseInt(e.target.value))} style={{ width: "100%" }} />
+        <input type="range" aria-label="Timeline position" min={sorted[0]?.index ?? 0} max={maxIdx} value={cursor} onChange={(e) => setCursor(parseInt(e.target.value))} style={{ width: "100%" }} />
         <div className="row" style={{ justifyContent: "space-between", marginTop: 8 }}>
           <span className="meta-cell">Genesis</span>
           <span className="meta-cell">Now — {maxIdx} entries</span>
@@ -40,7 +40,7 @@ export default function TimeTravelClient({ entries }: { entries: Entry[] }) {
 
       <div className="grid grid-2">
         <div className="card">
-          <h3>Chain state at #{cursor}</h3>
+          <h2>Chain state at #{cursor}</h2>
           <p className="card-sub">{visible.length} events visible at this point</p>
           {current ? (
             <div className="grid" style={{ gap: 10, marginTop: 12 }}>
@@ -55,7 +55,7 @@ export default function TimeTravelClient({ entries }: { entries: Entry[] }) {
         </div>
 
         <div className="card" style={{ maxHeight: 520, overflowY: "auto" }}>
-          <h3>Replay log (up to #{cursor})</h3>
+          <h2>Replay log (up to #{cursor})</h2>
           <div className="timeline" style={{ marginTop: 12 }}>
             {visible.slice(-30).reverse().map((e) => (
               <div key={e.id} className="tl-item">
@@ -68,7 +68,7 @@ export default function TimeTravelClient({ entries }: { entries: Entry[] }) {
       </div>
 
       <div className="card">
-        <h3>Why time-travel matters</h3>
+        <h2>Why time-travel matters</h2>
         <p className="small muted">Tamper-evidence means you can prove what the chain looked like at any past point. If someone tampers with an old entry, the hash chain breaks forward — this viewer lets auditors verify integrity at any historical index, not just head.</p>
       </div>
     </div>

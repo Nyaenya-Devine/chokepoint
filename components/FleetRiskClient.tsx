@@ -84,7 +84,7 @@ export default function FleetRiskClient() {
 
       <div className="card">
         <div className="row mb-16" style={{ justifyContent: "space-between" }}>
-          <div><h3 className="mb-0">Risk heatmap</h3><p className="card-sub mb-0">Agents sorted by risk — color = severity, width = score</p></div>
+          <div><h2 className="mb-0">Risk heatmap</h2><p className="card-sub mb-0">Agents sorted by risk — color = severity, width = score</p></div>
           <a href="/api/siem-export?format=json" className="btn btn-sm btn-ghost"><Download size={14}/> Export JSON</a>
         </div>
         <div className="grid" style={{ gap: 8 }}>
@@ -102,7 +102,7 @@ export default function FleetRiskClient() {
       </div>
 
       <div className="card">
-        <h3>Top factors</h3>
+        <h2>Top factors</h2>
         <p className="card-sub">Why agents scored high</p>
         <div className="grid" style={{ gap: 8 }}>
           {profiles.filter(p=>p.severity!=="LOW").slice(0,8).map(p=>(
