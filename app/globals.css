@@ -741,3 +741,34 @@ code, pre, .mono {
   .grid-4 { grid-template-columns: minmax(0, 1fr); }
   .barlist-row { grid-template-columns: minmax(64px, 1fr) minmax(40px, 1.6fr) 30px; }
 }
+
+/* ── Keyboard focus & motion preferences ───────────────────────────
+   .btn:focus-visible above covers the buttons; everything else that can
+   take focus (nav links, table row tabs, inputs, selects, the audit-log
+   expanders) was relying on the browser default, which this dark UI makes
+   nearly invisible. One ring, brand accent, offset so it clears the
+   1px borders the panels use. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The .spin rule above only covered the one spinner. Honour the OS-level
+   preference everywhere so no animation or transition plays for a user who
+   has asked for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
