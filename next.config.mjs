@@ -15,6 +15,32 @@ const nextConfig = {
       {
         source: "/(.*)",
         headers: [
+          {
+            // Was the only one of the four Next apps shipping without a CSP.
+            // This app loads nothing off-origin: no next/font, no third-party
+            // scripts or stylesheets, no dangerouslySetInnerHTML, and the only
+            // external URLs in the source are plain <a href> links. That makes
+            // a strict policy safe rather than aspirational. 'unsafe-inline' on
+            // script-src stays because Next injects inline bootstrap scripts;
+            // removing it needs nonces threaded through every page.
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob:",
+              "font-src 'self' data:",
+              "media-src 'self'",
+              "connect-src 'self'",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'none'",
+              "worker-src 'self'",
+              "manifest-src 'self'",
+              "upgrade-insecure-requests",
+            ].join("; "),
+          },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
