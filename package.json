@@ -42,7 +42,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@cyclonedx/cyclonedx-npm": "^6.0.1",
+    "@cyclonedx/cyclonedx-npm": "^7.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^26.6.6",
     "@types/react": "19.3.0",
